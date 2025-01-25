@@ -6,7 +6,7 @@
    [ring.middleware.flash :as f]
    [taoensso.timbre :as log]
    [taoensso.timbre.appenders.core :as appenders]
-   [org.httpkit.server :as srv]
+   [org.httpkit.server :as httpkit]
    [libra.routes :as ro]))
 
 (def server (atom nil))
@@ -16,19 +16,26 @@
 
 (defn start-server [port]
   (log/info "Server starting up!")
-  (reset! server
-          (srv/run-server
-           (->
-            #'ro/routes
-            (af/wrap-anti-forgery {:anti-forgery true
-                                   :token-expiry (* 60 60 24)})
-            f/wrap-flash
-            s/wrap-session
-            p/wrap-params)
-           {:port port
-            :join? false})))
+  (try
+    (let [srvr (httpkit/run-server ro/routes {:port port :legacy-return-value? false})]
+      (reset! server srvr)
+      srvr)
+    (catch Throwable e
+      (log/warn "Error starting server" e)
+      (throw e))))
+
+(defn stop-server []
+  (when-let [srvr @server]
+    (log/info "Server shutting down!")
+    (let [res @(future (httpkit/server-stop! srvr))]
+      (log/info "Server stopped" res)
+      (reset! server nil))))
+
+(defn restart-server [port]
+  (stop-server)
+  (start-server port))
 ;;
 ;; Repl functions. To startup and stop the system
 ;;
-(comment (start-server 8080))
+(comment (restart-server 4000))
 (comment (@server))
