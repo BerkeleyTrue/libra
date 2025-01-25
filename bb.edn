@@ -21,7 +21,7 @@
              [babashka.cli :as cli]
              [babashka.nrepl.server :as srv]
              [lread.status-line :as status]
-             [core])
+             [libra.core :as core])
   :init (def opts
           (merge (cli/parse-opts *command-line-args*)
                  {:out-dir "out"
@@ -36,7 +36,7 @@
             (deref (promise)))
 
   dev:server {:doc "Start development server."
-              :task (run 'start-server)}
+              :task (core/start-server (or (:port opts) 3000))}
 
   -dev {:depends [dev:server nrepl]}
 
