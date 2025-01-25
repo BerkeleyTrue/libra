@@ -1,4 +1,4 @@
-(ns static
+(ns libra.static
   (:require [babashka.fs :as fs]
             [clojure.string :as str]
             [clojure.java.io :as io]))

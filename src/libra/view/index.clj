@@ -1,7 +1,7 @@
-(ns view.index
+(ns libra.view.index
   (:require
-   [view.layout :as l]
-   [database.user :as user]))
+   [libra.view.layout :as l]
+   [libra.database.user :as user]))
 
 (defn page [req]
   (let [user (try

@@ -1,4 +1,4 @@
-(ns utils.database
+(ns libra.utils.database
   (:require
    [taoensso.timbre :as log])
   (:import

@@ -1,7 +1,7 @@
-(ns view.pwa
+(ns libra.view.pwa
   (:require
-   [view.core :as c]
-   [cheshire.core :as json]))
+   [cheshire.core :as json]
+   [libra.view.core :as c]))
 
 (defn sw [req]
   {:status 200

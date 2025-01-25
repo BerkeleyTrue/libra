@@ -1,9 +1,9 @@
-(ns view.login
+(ns libra.view.login
   (:require
-   [utils.response :as r]
-   [view.core :as c]
-   [view.layout :as l]
-   [database.user :as user]))
+   [libra.utils.response :as r]
+   [libra.view.core :as c]
+   [libra.view.layout :as l]
+   [libra.database.user :as user]))
 
 (defn logout [req]
   (assoc (r/redirect "/")

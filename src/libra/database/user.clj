@@ -1,6 +1,6 @@
-(ns database.user
+(ns libra.database.user
   (:require
-   [database.core :as db]
+   [libra.database.core :as db]
    [utils.encryption :as enc]))
 
 (defn by-id [id]

@@ -1,6 +1,6 @@
-(ns utils.hotreload
+(ns libra.utils.hotreload
   (:require
-   [config :refer [hotreload?]]
+   [libra.config :refer [hotreload?]]
    [taoensso.timbre :as log]
    [clojure.java.io :as io]
    [clojure.string :as str]))

@@ -1,6 +1,6 @@
-(ns utils.htmc
+(ns libra.utils.htmc
   (:require
-   [view.core :as c]))
+   [libra.view.core :as c]))
 
 ;; kudos to https://kalabasa.github.io/htmz/
 (defn htmc

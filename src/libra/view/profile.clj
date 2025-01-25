@@ -1,6 +1,6 @@
-(ns view.profile
+(ns libra.view.profile
   (:require
-   [view.layout :as l]))
+   [libra.view.layout :as l]))
 
 (defn index [req]
   (l/layout

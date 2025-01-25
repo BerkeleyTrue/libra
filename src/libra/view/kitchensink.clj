@@ -1,7 +1,7 @@
-(ns view.kitchensink
+(ns libra.view.kitchensink
   (:require
-   [view.core :as c]
-   [view.layout :as l]))
+   [libra.view.core :as c]
+   [libra.view.layout :as l]))
 
 ;;
 ;; Here is the example page of all the included components

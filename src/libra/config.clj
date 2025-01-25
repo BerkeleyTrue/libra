@@ -1,4 +1,4 @@
-(ns config)
+(ns libra.config)
 
 (def hotreload? true)
 

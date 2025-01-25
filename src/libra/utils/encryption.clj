@@ -1,4 +1,4 @@
-(ns utils.encryption
+(ns libra.utils.encryption
   (:require [clojure.string :as str]))
 
 (import java.security.SecureRandom)

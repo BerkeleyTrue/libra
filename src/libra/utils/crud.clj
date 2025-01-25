@@ -1,9 +1,9 @@
-(ns utils.crud
+(ns libra.utils.crud
   (:require
    [taoensso.timbre :as log]
-   [view.core :as c]
-   [utils.response :as r]
-   [utils.error :as e]))
+   [libra.view.core :as c]
+   [libra.utils.response :as r]
+   [libra.utils.error :as e]))
 
 (defn delete!
   [& {:keys [req delete-fn redirect-path]}]

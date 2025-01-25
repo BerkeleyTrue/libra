@@ -1,13 +1,13 @@
-(ns view.layout
+(ns libra.view.layout
   (:require
-   [config :refer [hotreload?]]
    [cheshire.core :as json]
    [hiccup2.core :as h]
-   [utils.session :as s]
-   [utils.response :as r]
-   [utils.htmc :as hc]
-   [view.style :as sty]
-   [view.core :as c]))
+   [libra.config :refer [hotreload?]]
+   [libra.utils.session :as s]
+   [libra.utils.response :as r]
+   [libra.utils.htmc :as hc]
+   [libra.view.style :as sty]
+   [libra.view.core :as c]))
 
 (def squint-cdn-path "https://cdn.jsdelivr.net/npm/squint-cljs@0.8.114")
 

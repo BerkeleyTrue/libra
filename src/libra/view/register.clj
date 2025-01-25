@@ -1,9 +1,9 @@
-(ns view.register
+(ns libra.view.register
   (:require
-   [database.user :as user]
-   [view.layout :as l]
-   [view.core :as c]
-   [utils.response :as r]))
+   [libra.database.user :as user]
+   [libra.view.layout :as l]
+   [libra.view.core :as c]
+   [libra.utils.response :as r]))
 
 (defn save-user [req]
   (user/insert

@@ -1,7 +1,7 @@
-(ns utils.mail
+(ns libra.utils.mail
   (:require
    [clojure.set :as s]
-   [utils.runtime :as runtime]))
+   [libra.utils.runtime :as runtime]))
 
 (runtime/if-bb
  (require '[pod.tzzh.mail :as m])

@@ -1,16 +1,16 @@
-(ns routes
+(ns libra.routes
   (:require
    [ruuter.core :as ruuter]
-   [static :as static]
-   [utils.hotreload :as hotreload]
-   [utils.session :as session]
-   [utils.response :as r]
-   [view.pwa :as pwa]
-   [view.index :as index]
-   [view.kitchensink :as sink]
-   [view.login :as login]
-   [view.profile :as profile]
-   [view.register :as register]))
+   [libra.utils.hotreload :as hotreload]
+   [libra.utils.session :as session]
+   [libra.utils.response :as r]
+   [libra.view.pwa :as pwa]
+   [libra.view.index :as index]
+   [libra.view.kitchensink :as sink]
+   [libra.view.login :as login]
+   [libra.view.profile :as profile]
+   [libra.view.register :as register]
+   [libra.static :as static]))
 
 (defn route [path method response-fn]
   {:path path

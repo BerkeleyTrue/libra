@@ -1,6 +1,6 @@
-(ns utils.base64-upload
+(ns libra.utils.base64-upload
   (:require 
-   [utils.encode :as encode]
+   [libra.utils.encode :as encode]
    [clojure.string :as str]))
 
 (defn get-file 

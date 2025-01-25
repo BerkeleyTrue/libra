@@ -1,8 +1,8 @@
-(ns database.core
+(ns libra.database.core
   (:require
    [clojure.string :as str]
    [honey.sql :as sql]
-   [config]
+   [libra.config :as config]
    [pod.babashka.go-sqlite3 :as jdbc]))
 
 (def db {:db config/db-opts})
