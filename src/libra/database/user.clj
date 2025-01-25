@@ -1,7 +1,7 @@
 (ns libra.database.user
   (:require
    [libra.database.core :as db]
-   [utils.encryption :as enc]))
+   [libra.utils.encryption :as enc]))
 
 (defn by-id [id]
   (first (db/find-by-keys :users {:id id})))
