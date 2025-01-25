@@ -1,20 +1,17 @@
 (ns libra.view.index
   (:require
+   [libra.infra.hiccup :as h]
    [libra.view.layout :as l]
    [libra.database.user :as user]))
 
-(defn page [req]
-  (let [user (try
-               (user/by-id
-                (Integer.
-                 (get-in req [:session :user-id] -1)))
-               (catch Exception _ nil))]
-    (l/layout
-     req
-     [:div.container
-      [:h1 "My Service"]
-      [:table     
-       [:tr [:td "User"]
-        [:td (get user
-                  :users/email
-                  "No user")]]]])))
+(h/defhtml page [req]
+  [:div.container
+   [:h1 "My Service"]
+   [:table
+    [:tr [:td "User"]
+     [:td "No user"]]]])
+
+(defn render-page [req]
+  (str (page req)))
+
+(comment (str (page {})))

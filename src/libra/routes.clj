@@ -1,5 +1,6 @@
 (ns libra.routes
   (:require
+   [taoensso.timbre :as log]
    [ruuter.core :as ruuter]
    [libra.utils.hotreload :as hotreload]
    [libra.utils.session :as session]
@@ -17,6 +18,7 @@
    :method method
    :response (fn [req]
                (let [resp (response-fn req)]
+                 (log/info "Response: " resp)
                  (if (string? resp)
                    {:status 200
                     :body resp}
@@ -46,18 +48,16 @@
 ;;
 ;; Extend your routes in here!!!
 ;;
-(def routes
-  #(ruuter/route
-    [(get "/manifest.json" pwa/manifest)
-     (get "/sw.js" pwa/sw)
-     (get "/static/:filename" static/serve-static)
-     (get "/" index/page)
-     (get "/kitchensink" sink/index)
-     (get "/register" register/index)
-     (post "/register" register/save)
-     (get "/login" login/index)
-     (post "/login" login/login)
-     (get "/logout" login/logout)
-     (get "/profile" profile/index)
-     (get "/hotreload" hotreload/hotreload)]
-    %))
+(defn handler [req]
+  (ruuter/route [(get "/" index/render-page)] req))
+   ; [(get "/manifest.json" pwa/manifest)
+     ; (get "/sw.js" pwa/sw)
+     ; (get "/static/:filename" static/serve-static)
+      ; (get "/kitchensink" sink/index)
+      ; (get "/register" register/index)
+      ; (post "/register" register/save)
+      ; (get "/login" login/index)
+      ; (post "/login" login/login)
+      ; (get "/logout" login/logout)
+      ; (get "/profile" profile/index)
+     ; (get "/hotreload" hotreload/hotreload)] %))

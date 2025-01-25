@@ -9,7 +9,7 @@
    [org.httpkit.server :as httpkit]
    [libra.routes :as ro]))
 
-(def server (atom nil))
+(defonce server (atom nil))
 
 (log/merge-config!
  {:appenders {:spit (appenders/spit-appender {:fname "./application.log"})}})
@@ -17,7 +17,7 @@
 (defn start-server [port]
   (log/info "Server starting up!")
   (try
-    (let [srvr (httpkit/run-server ro/routes {:port port :legacy-return-value? false})]
+    (let [srvr (httpkit/run-server ro/handler {:port port :legacy-return-value? false})]
       (reset! server srvr)
       srvr)
     (catch Throwable e
@@ -27,8 +27,8 @@
 (defn stop-server []
   (when-let [srvr @server]
     (log/info "Server shutting down!")
-    (let [res @(future (httpkit/server-stop! srvr))]
-      (log/info "Server stopped" res)
+    (when @(future (httpkit/server-stop! srvr))
+      (log/info "Server stopped")
       (reset! server nil))))
 
 (defn restart-server [port]
@@ -37,5 +37,5 @@
 ;;
 ;; Repl functions. To startup and stop the system
 ;;
-(comment (restart-server 4000))
+(comment (restart-server 3000))
 (comment (@server))
