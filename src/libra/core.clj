@@ -1,6 +1,5 @@
 (ns libra.core
   (:require
-   [babashka.cli :as cli]
    [ring.middleware.anti-forgery :as af]
    [ring.middleware.session :as s]
    [ring.middleware.params :as p]
@@ -11,14 +10,6 @@
    [libra.routes :as ro]))
 
 (def server (atom nil))
-
-(def cli-options-spec {:help {:alias :h}
-                       :port {:coerce :int
-                              :default 8080
-                              :alias :p}})
-
-(defn show-help []
-  (println (cli/format-opts {:spec cli-options-spec})))
 
 (log/merge-config!
  {:appenders {:spit (appenders/spit-appender {:fname "./application.log"})}})
@@ -36,16 +27,6 @@
             p/wrap-params)
            {:port port
             :join? false})))
-
-(defn -main [& args]
-  (let [cli-options (cli/parse-opts args {:spec cli-options-spec})
-        {:keys [port help]} cli-options]
-    (if help
-      (show-help)
-      (do (start-server port)
-          (println (str "Happy coding @ http://localhost:" port))
-          @(promise)))))
-
 ;;
 ;; Repl functions. To startup and stop the system
 ;;
