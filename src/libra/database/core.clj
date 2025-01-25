@@ -26,11 +26,8 @@
         (map to-lower-case-keys))))
 
 (defn execute-one!
-  ([sql]
-   (execute-one! db sql))
-  ([tx sql]
-   (-> (jdbc/execute-one! tx (sql/format sql))
-       to-lower-case-keys)))
+  ([sql])
+  ([tx sql]))
 
 (defn insert!
   ([table key-map]
