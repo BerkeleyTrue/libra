@@ -1,0 +1,5 @@
+.cpcache
+.direnv
+.lsp
+.nrepl-port
+.clj-kondo
