@@ -2,5 +2,6 @@
 .direnv
 .lsp
 .nrepl-port
-.clj-kondo
+.clj-kondo/.cache
+.clj-kondo/.lock
 application.log
