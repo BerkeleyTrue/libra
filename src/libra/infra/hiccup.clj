@@ -1,8 +1,6 @@
 (ns libra.infra.hiccup
   (:require
-   [hiccup2.core :as h]
-   ; [hiccup.util :as util]
-   [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]))
+   [hiccup2.core :as h]))
 
 (defmacro defhtml
   "Define a function, but wrap its output in an implicit [[hiccup2.core/html]]
@@ -61,19 +59,19 @@
 ;   [name value]
 ;   (input-field "hidden" name value))
 
-(defhtml anti-forgery-field
-  "Create a hidden field with the session anti-forgery token as its value.
-  This ensures that the form it's inside won't be stopped by the anti-forgery
-  middleware."
-  []
-  (hidden-field "__anti-forgery-token" (force *anti-forgery-token*)))
-
-(defhtml htmx-csrf []
-  [:script {:type "text/javascript" :async "true"}
-   (util/raw-string
-    (str "
-       document.body.addEventListener('htmx:configRequest', (event) => {
-         event.detail.headers['X-CSRF-TOKEN'] = '"
-         (force *anti-forgery-token*)
-         "'
-       }) "))])
+; (defhtml anti-forgery-field
+;   "Create a hidden field with the session anti-forgery token as its value.
+;   This ensures that the form it's inside won't be stopped by the anti-forgery
+;   middleware."
+;   []
+;   (hidden-field "__anti-forgery-token" (force *anti-forgery-token*)))
+;
+; (defhtml htmx-csrf []
+;   [:script {:type "text/javascript" :async "true"}
+;    (util/raw-string
+;     (str "
+;        document.body.addEventListener('htmx:configRequest', (event) => {
+;          event.detail.headers['X-CSRF-TOKEN'] = '"
+;          (force *anti-forgery-token*)
+;          "'
+;        }) "))])
