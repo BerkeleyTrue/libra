@@ -17,7 +17,12 @@
 (defn start-server [port]
   (log/info "Server starting up!")
   (try
-    (let [srvr (httpkit/run-server ro/handler {:port port :legacy-return-value? false})]
+    (let [final-handler (-> ro/handler
+                            (af/wrap-anti-forgery)
+                            (s/wrap-session)
+                            (p/wrap-params)
+                            (f/wrap-flash))
+          srvr (httpkit/run-server final-handler {:port port :legacy-return-value? false})]
       (reset! server srvr)
       srvr)
     (catch Throwable e

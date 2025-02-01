@@ -1,8 +1,9 @@
 (ns libra.view.layout
   (:require
    [cheshire.core :as json]
-   [hiccup2.core :as h]
+   [borkdude.html :as h]
    [libra.config :refer [hotreload?]]
+   [libra.infra.html :as hh]
    [libra.utils.session :as s]
    [libra.utils.response :as r]
    [libra.utils.htmc :as hc]
@@ -21,24 +22,24 @@
                     (str base-url "?"
                          (r/query-params->url
                           (merge q {"page" (- current-page 1)}))))]
-    [:div.d-flex.justify-content-center.mb-2
-     [:div.btn-group
-      [:a.btn.btn-primary
-       (if (nil? previous)
-         {:disabled true}
-         {:href previous}) "Previous"]
-      [:a.btn.btn-outline-primary {:href "#"} current-page " / " pages]
-      [:a.btn.btn-primary
-       (if (nil? next)
-         {:disabled true}
-         {:href next}) "Next"]]]))
+        [:div {:class "d-flex justify-content-center mb-2"}
+         [:div {:class "btn-group"}
+          [:a {:class "btn btn-primary"}
+           (if (nil? previous)
+             {:disabled true}
+             {:href previous}) "Previous"]
+          [:a {:class "btn btn-outline-primary" :href "#"} current-page " / " pages]
+          [:a {:class "btn btn-primary"}
+           (if (nil? next)
+             {:disabled true}
+             {:href next}) "Next"]]]))
 
 (defn autocomplete-input [& {:keys [label name value list required]}]
-  [:div.mb-3
-   [:label.form-label label]
-   [:input.form-control {:type "input" :list (str name "list")
-                         :name name :value value :required required
-                         :autocomplete "off"}]
+  [:div {:class "mb-3"}
+   [:label {:class "form-label"} label]
+   [:input {:class "form-control" :type "input" :list (str name "list")
+            :name name :value value :required required
+            :autocomplete "off"}]
    [:datalist {:id (str name "list")}
     (map (fn [e] [:option {:value e}]) list)]])
 
@@ -47,20 +48,20 @@
                      :or {required false}}]
   (cond
     (= type "textarea")
-    [:div.mb-3
-     [:label.form-label label]
-     [:textarea.form-control {:type type :name name :required required} value]]
+    [:div {:class "mb-3"}
+     [:label {:class "form-label"} label]
+     [:textarea {:class "form-control" :type type :name name :required required} value]]
 
     (= type "autocomplete")
     (autocomplete-input opts)
 
     (= type "base64-upload")
-    [:div.mb-3
-     [:label.form-label label]
+    [:div {:class "mb-3"}
+     [:label {:class "form-label"} label]
      (c/cljs-module "base64-upload")
-     [:input.form-control {:type "file" :required required :onchange (str "base64_upload(\"" id "\", this)")}]
+     [:input {:class "form-control" :type "file" :required required :onchange (str "base64_upload(\"" id "\", this)")}]
      [:input {:type "hidden" :name name :id (if id id label)}]]
-    
+
     :else
     [:div.mb-3
      [:label.form-label label]
@@ -71,79 +72,78 @@
 ;; js files. The key is the libraries name in your app if you require it
 ;;
 (defn global-importmap []
-  [:script {:type "importmap"}
-   (h/raw
-    (json/encode 
-     {:imports
-      {:squint-cljs/core.js (str squint-cdn-path "/src/squint/core.js")
-       :squint-cljs/string.js (str squint-cdn-path "/src/squint/string.js")}}))])
-       ; :squint-cljs/src/squint/string.js (str squint-cdn-path "/src/squint/string.js")
-       ; :squint-cljs/src/squint/set.js (str squint-cdn-path "/src/squint/set.js")
-       ; :squint-cljs/src/squint/html.js (str squint-cdn-path "/src/squint/html.js")}}))])
+  (hh/script
+   "importmap"
+   (json/encode
+    {:imports
+     {:squint-cljs/core.js (str squint-cdn-path "/src/squint/core.js")
+      :squint-cljs/string.js (str squint-cdn-path "/src/squint/string.js")
+      "squint-cljs/src/squint/string.js" (str squint-cdn-path "/src/squint/string.js")
+      "squint-cljs/src/squint/set.js" (str squint-cdn-path "/src/squint/set.js")
+      "squint-cljs/src/squint/html.js" (str squint-cdn-path "/src/squint/html.js")}}
+    {:pretty true})))
 
 (defn navbar [req]
   (let [user (s/current-user req)]
-    [:nav.navbar.sticky-top.navbar-expand-lg.navbar-bg-body-tertiary
-     [:div.container-fluid
-      [:a.navbar-brand.fw-bold {:href "/"} "bork·web"]
-      [:button.navbar-toggler {:type "button" :data-bs-toggle "collapse" :data-bs-target "#navbar"}
-       [:span.navbar-toggler-icon]]
-      [:div#navbar.collapse.navbar-collapse
-       (when (not user)
-         [:ul.navbar-nav
-          [:li.nav-item
-           [:a.nav-link {:href "/login"} "Login"]]          
-          [:li.nav-item
-           [:a.nav-link {:href "/register"} "Register"]]
-          [:li.nav-item
-           [:a.nav-link {:href "/kitchensink"} "Kitchensink"]]])
-       (when user
-         [:ul.navbar-nav
-          [:li.nav-item
-           [:a.nav-link {:href "/profile"} "Profile"]]
-          [:li.nav-item
-           [:a.nav-link {:href "/logout"} "Logout"]]])]]]))
+    (h/html
+     [:nav {:class "navbar sticky-top navbar-expand-lg navbar-bg-body-tertiary"}
+      [:div {:class "container-fluid"}
+       [:a {:class "navbar-brand fw-bold" :href "/"} "bork·web"]
+       [:button {:class "navbar-toggler" :type "button" :data-bs-toggle "collapse" :data-bs-target "#navbar"}
+        [:span {:class "navbar-toggler-icon"}]]
+       [:div {:id "navbar" :class "collapse navbar-collapse"}
+        (when (not user)
+          (h/html
+           [:ul {:class "navbar-nav"}
+            [:li {:class "nav-item"}
+             [:a {:class "nav-link" :href "/login"} "Login"]]
+            [:li {:class "nav-item"}
+             [:a {:class "nav-link" :href "/register"} "Register"]]
+            [:li {:class "nav-item"}
+             [:a {:class "nav-link" :href "/kitchensink"} "Kitchensink"]]]))
+        (when user
+          (h/html
+           [:ul {:class "navbar-nav"}
+            [:li {:class "nav-item"}
+             [:a {:class "nav-link" :href "/profile"} "Profile"]]
+            [:li {:class "nav-item"}
+             [:a {:class "nav-link" :href "/logout"} "Logout"]]]))]]])))
 
 (defn alert [req]
-  (let* [msg (get-in req [:flash :message])
-         severity (:severity msg)
-         msg (:message msg)]
-    [:div.alert {:class (str "alert-" severity) :role "alert"}
-     msg]))
+  (let [msg (get-in req [:flash :message])
+        severity (:severity msg)
+        msg (:message msg)
+        cls {:class (str "alert alert-" severity)}]
+    (when msg
+      (h/html
+       [:div {:role "alert" :& cls}
+        msg]))))
 
 (defn layout [req & body]
-  (str
-   (h/html
-       [:html
-        [:head
-         [:meta {:charset "utf-8"}]
-         [:meta {:name "viewport"
-                 :content "width=device-width, initial-scale=1"}]
-         [:link {:rel "manifest" :href "/manifest.json"}]
-         [:link {:href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-                 :rel "stylesheet"
-                 :integrity "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-                 :crossorigin "anonymous"}]
-         ; (global-importmap)
-         ; (c/cljs-module "register-sw")
-         ; (when hotreload?
-         ;   (c/cljs-module "hotreload"))
-         [:style (h/raw sty/*style*)]]
-        [:body {:data-bs-theme "dark" :id "body"}
-         (hc/htmc)
-         ; (navbar req)
-         ; (alert req)
-         body                 
-         [:script {:src "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                   :integrity "sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                   :crossorigin "anonymous"}]]])))
+  (h/html
+   [:html
+    [:head
+     [:meta {:charset "utf-8"}]
+     [:meta {:name "viewport"
+             :content "width=device-width, initial-scale=1"}]
+     [:link {:rel "manifest" :href "/manifest.json"}]
+     (global-importmap)
+     (c/cljs-module "register-sw")
+     (when hotreload?
+       (c/cljs-module "hotreload"))
+     [:style sty/*style*]]
+    [:body {:data-bs-theme "dark" :id "body"}
+     (hc/htmc)
+     (navbar req)
+     (alert req)
+     body]]))
 
 (defn modal [& {:keys [id title content actions]}]
-  [:div.modal.fade {:tabindex -1 :id id}
-   [:div.modal-dialog
-    [:div.modal-content
-     [:div.modal-header
-      [:h5.modal-title title]
-      [:button.btn-close {:type "button" :data-bs-dismiss "modal"}]]
-     [:div.modal-body content]
-     [:div.modal-footer actions]]]])
+  [:div {:class "modal fade" :tabindex -1 :id id}
+   [:div {:class "modal-dialog"}
+    [:div {:class "modal-content"}
+     [:div {:class "modal-header"}
+      [:h5 {:class "modal-title"} title]
+      [:button {:class "btn-close" :type "button" :data-bs-dismiss "modal"}]]
+     [:div {:class "modal-body"} content]
+     [:div {:class "modal-footer"} actions]]]])

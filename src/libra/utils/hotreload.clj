@@ -14,21 +14,26 @@
                            (map #(.lastModified %)))]
     (apply max lastModified-list)))
 
+(comment (last-modified))
+
 (defn modified?
   [last-timestamp]
   (not= (Long. last-timestamp) (last-modified)))
+
+(comment (modified? 0))
 
 (defn has-changes
   ([req]
    (has-changes req 0))
   ([req loop-count]
-   (let [last-timestamp (get-in req [:query-params "last-modified"])]
+   (let [last-timestamp (or (get-in req [:query-params "last-modified"]) 0)]
      (log/debug req)
+     (log/debug (get-in req [:query-params "last-modified"]))
      (cond
        (= 30 loop-count)
        {:status 200
         :body (str last-timestamp)}
-       
+
        (modified? last-timestamp)
        {:status 200
         :body (str (last-modified))}
