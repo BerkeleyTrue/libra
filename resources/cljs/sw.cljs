@@ -3,7 +3,7 @@
   (.waitUntil ev (-> self .-clients .claim)))
 
 (defn on-fetch [ev]
-  (.respondWith ev (js/fetch (.-request ev)) ))
+  (.respondWith ev (js/fetch (.-request ev))))
 
 (defn on-install [ev]
   (js/console.log "Install"))
