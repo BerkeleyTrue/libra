@@ -2,7 +2,7 @@
   (:require
    [integrant.core :as ig]
    [clojure.java.io :as io]
-   [ring.util.response :as response]
+   [libra.infra.ring :as response]
    [libra.utils.dep-macro :refer [defact]]))
 
 (defn last-modified []
