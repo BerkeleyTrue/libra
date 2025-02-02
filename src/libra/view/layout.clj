@@ -67,10 +67,6 @@
      [:label.form-label label]
      [:input.form-control {:type type :value value :name name :required required}]]))
 
-;;
-;; Extend importmap. This enables you to load other libraries in your
-;; js files. The key is the libraries name in your app if you require it
-;;
 (defn global-importmap []
   (hh/script
    "importmap"

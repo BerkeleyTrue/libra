@@ -2,8 +2,7 @@
   (:require
    [libra.config :refer [hotreload?]]
    [taoensso.timbre :as log]
-   [clojure.java.io :as io]
-   [clojure.string :as str]))
+   [clojure.java.io :as io]))
 
 (defn last-modified
   []
@@ -26,9 +25,7 @@
   ([req]
    (has-changes req 0))
   ([req loop-count]
-   (let [last-timestamp (or (get-in req [:query-params "last-modified"]) 0)]
-     (log/debug req)
-     (log/debug (get-in req [:query-params "last-modified"]))
+   (let [last-timestamp (get-in req [:query-params "last-modified"])]
      (cond
        (= 30 loop-count)
        {:status 200
