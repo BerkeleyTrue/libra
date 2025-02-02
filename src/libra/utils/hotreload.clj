@@ -1,11 +1,11 @@
 (ns libra.utils.hotreload
   (:require
-   [libra.config :refer [hotreload?]]
-   [taoensso.timbre :as log]
-   [clojure.java.io :as io]))
+   [integrant.core :as ig]
+   [clojure.java.io :as io]
+   [ring.util.response :as response]
+   [libra.utils.dep-macro :refer [defact]]))
 
-(defn last-modified
-  []
+(defn last-modified []
   (let [lastModified-list (->>
                            (io/resource "cljs")
                            io/file
@@ -15,34 +15,40 @@
 
 (comment (last-modified))
 
-(defn modified?
-  [last-timestamp]
+(defn modified? [last-timestamp]
   (not= (Long. last-timestamp) (last-modified)))
 
 (comment (modified? 0))
 
 (defn has-changes
-  ([req]
-   (has-changes req 0))
-  ([req loop-count]
-   (let [last-timestamp (get-in req [:query-params "last-modified"])]
-     (cond
-       (= 30 loop-count)
-       {:status 200
-        :body (str last-timestamp)}
+  ([last-timestamp] (has-changes last-timestamp 0))
+  ([last-timestamp loop-count]
+   (cond
+     (= 30 loop-count)
+     (str last-timestamp)
 
-       (modified? last-timestamp)
-       {:status 200
-        :body (str (last-modified))}
+     (modified? last-timestamp)
+     (str (last-modified))
 
-       :else
-       (do
-         (Thread/sleep 200)
-         (recur req (inc loop-count)))))))
+     :else
+     (do
+       (Thread/sleep 200)
+       (recur last-modified (inc loop-count))))))
 
-(defn hotreload
+(defact ->hotreload
+  [hotreload?]
   [req]
-  (if hotreload?
-    (has-changes req)
-    {:status 200
-     :body "Disabled"}))
+  (let [last-timestamp (get-in req [:query-params "last-modified"])]
+    (response/response (if hotreload?
+                         (has-changes last-timestamp)
+                         "Disabled"))))
+
+(defmethod ig/init-key :infra.routes/hotreload
+  [{:keys [hotreload?]} _]
+
+  [{:path "/ping"
+    :method :get
+    :get #(response/response "pong")}
+   {:path "/hotreload"
+    :method :get
+    :get (->hotreload hotreload?)}])

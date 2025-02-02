@@ -21,9 +21,6 @@
                 (.addShutdownHook (Thread. (fn [] (fs/delete ".nrepl-port")))))
             (deref (promise)))
 
-  dev:server {:doc "Start development server."
-              :task (core/start-server (or (:port opts) 3000))}
-
   -dev {:depends [nrepl]}
 
   dev {:doc "Start development server with file watching and live reload."

@@ -1,3 +1,5 @@
 {:lint-as
  {libra.infra.hiccup/defhtml clojure.core/defn
-  libra.infra.hiccup/defelem :hiccup.def/defelem}}
+  libra.infra.hiccup/defelem :hiccup.def/defelem}
+ :hooks
+ {:macroexpand {libra.utils.dep-macro/defact libra.utils.dep-macro/defact}}}

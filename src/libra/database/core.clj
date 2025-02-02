@@ -5,7 +5,7 @@
    [libra.config :as config]
    [pod.babashka.go-sqlite3 :as jdbc]))
 
-(def db {:db config/db-opts})
+(def db {:db {}})
 
 (defn build-key [key]
   (if (namespace key)
