@@ -17,24 +17,3 @@
       (assoc (r/redirect "/")
              :session {:user-id (:users/id (user/by-email email))})
       (r/flash-msg (r/redirect "/login") "danger" "Wrong username or password"))))
-
-;;
-;; Login form. Adjust to your needs
-;;
-(defn index [req]
-  (l/layout
-   req
-   [:div.container.p-4
-    [:div.row.justify-content-md-center
-     [:div
-      [:h1 "Login"]
-      [:form {:method "post" :action "/login"}
-       (c/csrf-token)
-       [:div.mb-3 
-        [:label.form-label "E-Mail"]
-        [:input.form-control {:type "email" :name "email" :placeholder "E-Mail"}]]
-       [:div.mb-3 
-        [:label.form-label "Password"]
-        [:input.form-control {:type "password" :name "password"}]]
-       [:div.mb-3
-        [:input.btn.btn-primary {:type "submit" :value "Login"}]]]]]]))

@@ -2,8 +2,9 @@
   (:require
    [cheshire.core :as json]
    [borkdude.html :as h]
-   [libra.config :refer [hotreload?]]
+   [integrant.core :as ig]
    [libra.infra.html :as hh]
+   [libra.utils.dep-macro :refer [defact]]
    [libra.utils.session :as s]
    [libra.utils.response :as r]
    [libra.utils.htmc :as hc]
@@ -115,33 +116,29 @@
        [:div {:role "alert" :& cls}
         msg]))))
 
-(defn layout [req & body]
+(defact ->layout
+  [hotreload?]
+  [req & body]
   (h/html
-    [:<>
-     [:$ "<!DOCTYPE html>"]
-     [:html
-      [:head
-       [:meta {:charset "utf-8"}]
-       [:meta {:name "viewport"
-               :content "width=device-width, initial-scale=1"}]
-       [:link {:rel "manifest" :href "/manifest.json"}]
-       (global-importmap)
-       (c/cljs-module "register-sw")
-       (when hotreload?
-         (c/cljs-module "hotreload"))
-       [:style sty/*style*]]
-      [:body {:data-bs-theme "dark" :id "body"}
-       (hc/htmc)
-       (navbar req)
-       (alert req)
-       body]]]))
+   [:<>
+    [:$ "<!DOCTYPE html>"]
+    [:html
+     [:head
+      [:meta {:charset "utf-8"}]
+      [:meta {:name "viewport"
+              :content "width=device-width, initial-scale=1"}]
+      [:link {:rel "manifest" :href "/manifest.json"}]
+      (global-importmap)
+      (c/cljs-module "register-sw")
+      (when hotreload?
+        (c/cljs-module "hotreload"))
+      [:style sty/*style*]]
+     [:body {:data-bs-theme "dark" :id "body"}
+      (hc/htmc)
+      (navbar req)
+      (alert req)
+      body]]]))
 
-(defn modal [& {:keys [id title content actions]}]
-  [:div {:class "modal fade" :tabindex -1 :id id}
-   [:div {:class "modal-dialog"}
-    [:div {:class "modal-content"}
-     [:div {:class "modal-header"}
-      [:h5 {:class "modal-title"} title]
-      [:button {:class "btn-close" :type "button" :data-bs-dismiss "modal"}]]
-     [:div {:class "modal-body"} content]
-     [:div {:class "modal-footer"} actions]]]])
+(defmethod ig/init-key :app.views/layout
+  [{:keys [hotreload?]} _]
+  (->layout hotreload?))

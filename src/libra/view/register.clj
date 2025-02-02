@@ -1,8 +1,6 @@
 (ns libra.view.register
   (:require
    [libra.database.user :as user]
-   [libra.view.layout :as l]
-   [libra.view.core :as c]
    [libra.utils.response :as r]))
 
 (defn save-user [req]
@@ -18,27 +16,3 @@
     (r/flash-msg
      (r/redirect "/register")
      "danger" "Password don't match")))
-
-;;
-;; Register form. Adjust to your needs
-;; 
-(defn index [req]
-  (l/layout
-   req
-   [:div.container.p-4
-    [:div.row.justify-content-md-center
-     [:div
-      [:h1 "Register"]
-      [:form {:method "post" :action "/register"}
-       (c/csrf-token)
-       [:div.mb-3 
-        [:label.form-label "E-Mail"]
-        [:input.form-control {:type "email" :name "email" :placeholder "E-Mail"}]]
-       [:div.mb-3 
-        [:label.form-label "Password"]
-        [:input.form-control {:type "password" :name "password1"}]]
-       [:div.mb-4
-        [:label.form-label "Password again"]
-        [:input.form-control {:type "password" :name "password2"}]]
-       [:div.mb-3
-        [:input.btn.btn-primary {:type "submit" :value "Register"}]]]]]]))

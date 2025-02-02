@@ -1,46 +1,34 @@
 (ns libra.core
   (:require
-   [ring.middleware.anti-forgery :as af]
-   [ring.middleware.session :as s]
-   [ring.middleware.params :as p]
-   [ring.middleware.flash :as f]
+   [integrant.core :as ig]
    [taoensso.timbre :as log]
    [taoensso.timbre.appenders.core :as appenders]
-   [org.httpkit.server :as httpkit]
-   [libra.routes :as ro]))
-
-(defonce server (atom nil))
+   [libra.config :refer [config]]))
 
 (log/merge-config!
  {:appenders {:spit (appenders/spit-appender {:fname "./application.log"})}})
 
-(defn start-server [port]
-  (log/info "Server starting up!")
-  (try
-    (let [final-handler (-> ro/handler
-                            (af/wrap-anti-forgery)
-                            (s/wrap-session)
-                            (p/wrap-params)
-                            (f/wrap-flash))
-          srvr (httpkit/run-server final-handler {:port port :legacy-return-value? false})]
-      (reset! server srvr)
-      srvr)
-    (catch Throwable e
-      (log/warn "Error starting server" e)
-      (throw e))))
+;; log uncaught exceptions in threads
+(Thread/setDefaultUncaughtExceptionHandler
+ (reify Thread$UncaughtExceptionHandler
+   (uncaughtException [_ thread ex]
+     (log/error
+      {:what :uncaught-exception
+       :exception ex
+       :where (str "Uncaught exception on" (.getName thread))}))))
 
-(defn stop-server []
-  (when-let [srvr @server]
-    (log/info "Server shutting down!")
-    (when @(future (httpkit/server-stop! srvr))
-      (log/info "Server stopped")
-      (reset! server nil))))
+(defonce system (atom nil))
 
-(defn restart-server [port]
-  (stop-server)
-  (start-server port))
-;;
-;; Repl functions. To startup and stop the system
-;;
-(comment (restart-server 3000))
-(comment (@server))
+(defn stop-app []
+  (some-> (deref system)
+          (ig/halt!))
+  (shutdown-agents))
+
+(defn start-app [& _]
+  (->> config
+       (ig/init)
+       (reset! system))
+  (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
+
+(defn -main [& _]
+  (start-app))

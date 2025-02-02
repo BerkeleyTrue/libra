@@ -1,6 +1,7 @@
 (ns libra.utils.crud
   (:require
    [taoensso.timbre :as log]
+   [ring.middleware.anti-forgery :as af]
    [libra.view.core :as c]
    [libra.utils.response :as r]
    [libra.utils.error :as e]))
@@ -72,10 +73,15 @@
     [:tbody
      (map #(table-row edit-path-fn actions-fn %) elements)]]])
 
+(defn csrf-token []
+  [:input {:type "hidden"
+           :name "__anti-forgery-token"
+           :value af/*anti-forgery-token*}])
+
 (defn create-update-form
   [& {:keys [save-path form-inputs]}]
   [:form {:action save-path :method "post"}
-   (c/csrf-token)
+   (csrf-token)
    form-inputs
    [:div.mt-3.d-grid
     [:input.btn.btn-primary {:type "submit" :value "Save"}]]])

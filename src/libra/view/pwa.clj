@@ -3,12 +3,12 @@
    [cheshire.core :as json]
    [libra.view.core :as c]))
 
-(defn sw [req]
+(defn sw [_req]
   {:status 200
    :headers {"Content-Type" "application/javascript"}
    :body (c/cljs->inline "sw")})
 
-(defn manifest [req]
+(defn manifest [_req]
   {:status 200
    :headers {"Content-Type" "application/json"}
    :body (json/encode
