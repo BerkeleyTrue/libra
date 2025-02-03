@@ -1,8 +1,6 @@
 {:paths ["src" "resources"]
  :deps {com.taoensso/timbre                 {:mvn/version "6.5.0"}
         integrant/integrant                 {:mvn/version "0.13.1"}
-        lread/status-line                   {:git/url "https://github.com/lread/status-line.git"
-                                             :sha "cf44c15f30ea3867227fa61ceb823e5e942c707f"}
 
         com.github.seancorfield/honeysql    {:mvn/version "2.6.1161"}
         com.github.seancorfield/next.jdbc   {:mvn/version "1.3.939"}

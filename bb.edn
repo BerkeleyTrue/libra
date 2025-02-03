@@ -1,13 +1,14 @@
 {:paths ["src" "resources"]
- :deps {org.berkeleytrue/libra {:local/root "."}}
+ :deps {org.berkeleytrue/libra {:local/root "."}
+        lread/status-line      {:git/url "https://github.com/lread/status-line.git"
+                                :sha "cf44c15f30ea3867227fa61ceb823e5e942c707f"}}
  :pods {org.babashka/go-sqlite3 {:version "0.2.7"}}
  :tasks
  {:requires ([clojure.string :as string]
              [babashka.fs :as fs]
              [babashka.cli :as cli]
              [babashka.nrepl.server :as srv]
-             [lread.status-line :as status]
-             [libra.core :as core])
+             [lread.status-line :as status])
   :init (def opts
           (merge (cli/parse-opts *command-line-args*)
                  {:out-dir "out"
