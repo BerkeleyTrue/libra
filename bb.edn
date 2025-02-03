@@ -25,4 +25,7 @@
   -dev {:depends [nrepl]}
 
   dev {:doc "Start development server with file watching and live reload."
+       :extra-deps {integrant/repl  {:mvn/version "0.4.0"}
+                    ring/ring-devel {:mvn/version "1.12.1"}}
+       :extra-paths ["env/dev"]
        :task (run '-dev {:parallel true})}}}
