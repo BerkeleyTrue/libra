@@ -5,7 +5,7 @@
    [taoensso.timbre :as log]
    [org.httpkit.server :as http]))
 
-(defmethod ig/init-key ::server [{:keys [handler port on-start-ch]} _]
+(defmethod ig/init-key ::server [_ {:keys [handler port on-start-ch]}]
   (log/info "Starting HTTP server on port" port)
   (let [s (http/run-server handler {:port port
                                     :legacy-return-value? false})]

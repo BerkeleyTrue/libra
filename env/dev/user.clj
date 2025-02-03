@@ -6,7 +6,7 @@
    [libra.config :refer [config]]))
 
 
-(ig-repl/set-prep! #(config))
+(ig-repl/set-prep! #(ig/expand config ig/deprofile [:dev]))
 
 (defn run-config [key deps f]
   (let [system (ig/init config (conj deps key))

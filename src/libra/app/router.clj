@@ -13,7 +13,7 @@
   [req]
   (ruuter/route routes req))
 
-(defmethod ig/init-key ::middleware [{:keys [env-middleware]} _]
+(defmethod ig/init-key ::middleware [_ {:keys [env-middleware]}]
   (into [] (concat [af/wrap-anti-forgery
                     f/wrap-flash
                     s/wrap-session
@@ -21,9 +21,9 @@
                    env-middleware)))
 
 (defmethod ig/init-key ::routes
-  [{:keys [hotreload index]} _]
+  [_ {:keys [hotreload index]}]
   (into [] (concat hotreload index)))
 
 (defmethod ig/init-key ::handler
-  [{:keys [routes middleware]} _]
+  [_ {:keys [routes middleware]}]
   (reduce #(%2 %1) (->handler routes) middleware))

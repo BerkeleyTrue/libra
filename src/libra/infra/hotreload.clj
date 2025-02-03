@@ -45,7 +45,7 @@
 
 (defmethod ig/init-key ::routes
 
-  [{:keys [hotreload?]} _]
+  [_ {:keys [hotreload?]}]
 
   [{:path "/ping"
     :method :get
