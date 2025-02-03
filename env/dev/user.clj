@@ -5,7 +5,6 @@
    ; [portal.api :as p]
    [libra.config :refer [config]]))
 
-(ig/load-namespaces config)
 
 (ig-repl/set-prep! #(config))
 
@@ -19,7 +18,7 @@
   (ig-repl/go))
 
 (comment
-  ()
+  (ig/load-namespaces config)
   (ig-repl/go) ; starts the system
   (halt) ; stops the system
   (reset) ; resets the system

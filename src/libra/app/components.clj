@@ -6,9 +6,9 @@
    [libra.infra.html :as hh]
    [libra.utils.dep-macro :refer [defact]]
    [libra.utils.session :as s]
-   [libra.utils.htmc :as hc]
-   [libra.view.style :as sty]
-   [libra.view.core :as c]))
+   ; [libra.utils.htmc :as hc]
+   [libra.view.style :as sty]))
+   ; [libra.view.core :as c]))
 
 (def squint-cdn-path "https://cdn.jsdelivr.net/npm/squint-cljs@0.8.114")
 
@@ -72,13 +72,13 @@
       [:meta {:name "viewport"
               :content "width=device-width, initial-scale=1"}]
       [:link {:rel "manifest" :href "/manifest.json"}]
-      (global-importmap)
-      (c/cljs-module "register-sw")
-      (when hotreload?
-        (c/cljs-module "hotreload"))
+      ; (global-importmap)
+      ; (c/cljs-module "register-sw")
+      ; (when hotreload?
+      ;   (c/cljs-module "hotreload"))
       [:style sty/*style*]]
      [:body {:data-bs-theme "dark" :id "body"}
-      (hc/htmc)
+      ; (hc/htmc)
       (navbar req)
       (alert req)
       body]]]))

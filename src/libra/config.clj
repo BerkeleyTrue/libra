@@ -4,6 +4,7 @@
 
 (def config
   {::hotreload? true
+   :libra.env/middleware {}
 
    :libra.infra.db/sqlite {:file "data/libra.db"}
    :libra.infra.hotreload/hotreload {:hotreload? (ig/ref ::hotreload?)}
