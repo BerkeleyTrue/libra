@@ -5,7 +5,7 @@
    [ring.util.parsing :as parsing]
    [ring.util.time :refer [format-date]]))
 
-(def ^{:added "1.4"} redirect-status-codes
+(def redirect-status-codes
   "Map a keyword to a redirect status code."
   {:moved-permanently 301
    :found 302
@@ -22,18 +22,8 @@
     :headers {"Location" url}
     :body    ""}))
 
-(defn redirect-after-post
-  "Returns a Ring response for an HTTP 303 redirect. Deprecated in favor
-  of using redirect with a :see-other status."
-  {:deprecated "1.4"}
-  [url]
-  {:status  303
-   :headers {"Location" url}
-   :body    ""})
-
 (defn created
   "Returns a Ring response for a HTTP 201 created response."
-  {:added "1.2"}
   ([url] (created url nil))
   ([url body]
    {:status  201
@@ -42,7 +32,6 @@
 
 (defn bad-request
   "Returns a 400 'bad request' response."
-  {:added "1.7"}
   [body]
   {:status  400
    :headers {}
@@ -50,7 +39,6 @@
 
 (defn not-found
   "Returns a 404 'not found' response."
-  {:added "1.1"}
   [body]
   {:status  404
    :headers {}
@@ -104,7 +92,6 @@
 (defn find-header
   "Looks up a header in a Ring response (or request) case insensitively,
   returning the header map entry, or nil if not present."
-  {:added "1.4"}
   [resp ^String header-name]
   (->> (:headers resp)
        (filter #(.equalsIgnoreCase header-name (key %)))
@@ -113,7 +100,6 @@
 (defn get-header
   "Looks up a header in a Ring response (or request) case insensitively,
   returning the value of the header, or nil if not present."
-  {:added "1.2"}
   [resp header-name]
   (some-> resp (find-header header-name) val))
 
@@ -121,7 +107,6 @@
   "Looks up a header in a Ring response (or request) case insensitively,
   then updates the header with the supplied function and arguments in the
   manner of update-in."
-  {:added "1.4"}
   [resp header-name f & args]
   (let [header-key (or (some-> resp (find-header header-name) key) header-name)]
     (update-in resp [:headers header-key] #(apply f % args))))
@@ -129,7 +114,6 @@
 (defn charset
   "Returns an updated Ring response with the supplied charset added to the
   Content-Type header."
-  {:added "1.1"}
   [resp charset]
   (update-header resp "Content-Type"
                  (fn [content-type]
@@ -139,7 +123,6 @@
 
 (defn get-charset
   "Gets the character encoding of a Ring response."
-  {:added "1.6"}
   [resp]
   (some-> (get-header resp "Content-Type")
           parsing/find-content-type-charset))
@@ -147,13 +130,11 @@
 (defn set-cookie
   "Sets a cookie on the response. Requires the handler to be wrapped in the
   wrap-cookies middleware."
-  {:added "1.1"}
   [resp name value & [opts]]
   (assoc-in resp [:cookies name] (merge {:value value} opts)))
 
 (defn response?
   "True if the supplied value is a valid response map."
-  {:added "1.1"}
   [resp]
   (and (map? resp)
        (integer? (:status resp))

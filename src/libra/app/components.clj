@@ -46,6 +46,7 @@
            [:meta {:name "viewport"
                    :content "width=device-width, initial-scale=1"}]
            [:link {:rel "manifest" :href "/manifest.json"}]
+           [:link {:rel "stylesheet" :href "/public/css/pico.min.css"}]
            (global-importmap)
            ; (c/cljs-module "register-sw")
            ; (when hotreload?

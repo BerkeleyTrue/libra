@@ -24,10 +24,10 @@
                    [logger/logger])))
 
 (defmethod ig/init-key ::routes
-  [_ {:keys [hotreload index]}]
-  (into [] (concat hotreload index)))
+  [_ {:keys [hotreload index static]}]
+  (into [] (concat hotreload index static)))
 
 (defmethod ig/init-key ::handler
   [_ {:keys [routes middlewares]}]
-  (log/info "Initializing handler" middlewares)
+  (log/info "Initializing handler" routes)
   (reduce #(%2 %1) (->handler routes) middlewares))

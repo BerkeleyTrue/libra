@@ -1,7 +1,12 @@
-(ns libra.static
-  (:require [babashka.fs :as fs]
-            [clojure.string :as str]
-            [clojure.java.io :as io]))
+(ns libra.infra.static
+  (:require
+   [taoensso.timbre :as log]
+   [babashka.fs :as fs]
+   [clojure.string :as str]
+   [integrant.core :as ig]
+   [libra.infra.ring :as response])
+  (:import
+    [java.net URLDecoder]))
 
 (def ^{:doc "A map of file extensions to mime-types."}
   default-mime-types
@@ -115,9 +120,21 @@
    (let [mime-types (merge default-mime-types mime-types)]
      (mime-types (filename-ext filename)))))
 
+(defn create-body [path]
+  (-> (response/response (fs/file path))
+      (response/header "Content-Type" (ext-mime-type (fs/file-name path)))))
+
 (defn serve-static
   "Actual serving function that is used in the router"
   [req]
-  (let [path (str/replace-first (:uri req) "/static/" "")]
-    {:headers {"Content-Type" (ext-mime-type (fs/file-name path))}
-     :body ((memoize slurp) (io/resource path))}))
+  (log/info "static")
+  (let [path (str "resources/" (str/replace-first (URLDecoder/decode (:uri req) "UTF-8") #"^/public/" ""))
+        f (fs/path path)]
+    (cond (fs/readable? f) (create-body f)
+          :else (response/not-found "File not found")))) 
+
+(defmethod ig/init-key ::routes
+  [_ _]
+  [{:path "/public/:file*"
+    :method :get
+    :response serve-static}])
