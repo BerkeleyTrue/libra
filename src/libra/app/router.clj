@@ -1,12 +1,14 @@
 (ns libra.app.router
   (:require
+   [taoensso.timbre :as log]
    [ruuter.core :as ruuter]
    [integrant.core :as ig]
    [ring.middleware.anti-forgery :as af]
    [ring.middleware.session :as s]
    [ring.middleware.params :as p]
    [ring.middleware.flash :as f]
-   [libra.utils.dep-macro :refer [defact]]))
+   [libra.utils.dep-macro :refer [defact]]
+   [libra.infra.middlewares.logger :as logger]))
 
 (defact ->handler
   [routes]
@@ -18,12 +20,14 @@
                     f/wrap-flash
                     s/wrap-session
                     p/wrap-params]
-                   env-middleware)))
+                   env-middleware
+                   [logger/logger])))
 
 (defmethod ig/init-key ::routes
   [_ {:keys [hotreload index]}]
   (into [] (concat hotreload index)))
 
 (defmethod ig/init-key ::handler
-  [_ {:keys [routes middleware]}]
-  (reduce #(%2 %1) (->handler routes) middleware))
+  [_ {:keys [routes middlewares]}]
+  (log/info "Initializing handler" middlewares)
+  (reduce #(%2 %1) (->handler routes) middlewares))
