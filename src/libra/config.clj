@@ -20,5 +20,7 @@
    :libra.app.router/routes {:index (ig/ref :libra.app.drivers.index/routes)
                              :hotreload (ig/ref :libra.infra.hotreload/routes)}
 
+   :libra.app.router/middleware {:env-middleware (ig/ref :libra.env/middleware)}
+
    :libra.app.router/handler {:routes (ig/ref :libra.app.router/routes)
-                              :env-middlewares (ig/ref :libra.env/middleware)}})
+                              :middlewares (ig/ref :libra.app.router/middleware)}})
