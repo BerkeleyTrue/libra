@@ -1,4 +1,4 @@
-(ns libra.view.layout
+(ns libra.app.components
   (:require
    [cheshire.core :as json]
    [borkdude.html :as h]
@@ -6,67 +6,11 @@
    [libra.infra.html :as hh]
    [libra.utils.dep-macro :refer [defact]]
    [libra.utils.session :as s]
-   [libra.utils.response :as r]
    [libra.utils.htmc :as hc]
    [libra.view.style :as sty]
    [libra.view.core :as c]))
 
 (def squint-cdn-path "https://cdn.jsdelivr.net/npm/squint-cljs@0.8.114")
-
-(defn paginator [req current-page pages base-url]
-  (let* [q (:query-params req)
-         next (when (not= current-page pages)
-                (str base-url "?"
-                     (r/query-params->url
-                      (merge q {"page" (+ current-page 1)}))))
-         previous (when (not= current-page 1)
-                    (str base-url "?"
-                         (r/query-params->url
-                          (merge q {"page" (- current-page 1)}))))]
-        [:div {:class "d-flex justify-content-center mb-2"}
-         [:div {:class "btn-group"}
-          [:a {:class "btn btn-primary"}
-           (if (nil? previous)
-             {:disabled true}
-             {:href previous}) "Previous"]
-          [:a {:class "btn btn-outline-primary" :href "#"} current-page " / " pages]
-          [:a {:class "btn btn-primary"}
-           (if (nil? next)
-             {:disabled true}
-             {:href next}) "Next"]]]))
-
-(defn autocomplete-input [& {:keys [label name value list required]}]
-  [:div {:class "mb-3"}
-   [:label {:class "form-label"} label]
-   [:input {:class "form-control" :type "input" :list (str name "list")
-            :name name :value value :required required
-            :autocomplete "off"}]
-   [:datalist {:id (str name "list")}
-    (map (fn [e] [:option {:value e}]) list)]])
-
-(defn form-input [& {:keys [label type name value required id]
-                     :as opts
-                     :or {required false}}]
-  (cond
-    (= type "textarea")
-    [:div {:class "mb-3"}
-     [:label {:class "form-label"} label]
-     [:textarea {:class "form-control" :type type :name name :required required} value]]
-
-    (= type "autocomplete")
-    (autocomplete-input opts)
-
-    (= type "base64-upload")
-    [:div {:class "mb-3"}
-     [:label {:class "form-label"} label]
-     (c/cljs-module "base64-upload")
-     [:input {:class "form-control" :type "file" :required required :onchange (str "base64_upload(\"" id "\", this)")}]
-     [:input {:type "hidden" :name name :id (if id id label)}]]
-
-    :else
-    [:div.mb-3
-     [:label.form-label label]
-     [:input.form-control {:type type :value value :name name :required required}]]))
 
 (defn global-importmap []
   (hh/script
@@ -139,6 +83,6 @@
       (alert req)
       body]]]))
 
-(defmethod ig/init-key :app.views/layout
+(defmethod ig/init-key ::layout
   [{:keys [hotreload?]} _]
   (->layout hotreload?))

@@ -1,4 +1,4 @@
-(ns libra.view.index
+(ns libra.app.drivers.index
   (:require
    [borkdude.html :as h]
    [integrant.core :as ig]
@@ -18,7 +18,7 @@
        [:tr [:td "User"]
         [:td "No user"]]]]))))
 
-(defmethod ig/init-key :app.routes/index
+(defmethod ig/init-key ::routes
   [{:keys [layout]} _]
   [{:path "/"
     :method :get

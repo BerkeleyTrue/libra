@@ -1,4 +1,4 @@
-(ns libra.utils.hotreload
+(ns libra.infra.hotreload
   (:require
    [integrant.core :as ig]
    [clojure.java.io :as io]
@@ -43,7 +43,8 @@
                          (has-changes last-timestamp)
                          "Disabled"))))
 
-(defmethod ig/init-key :infra.routes/hotreload
+(defmethod ig/init-key ::routes
+
   [{:keys [hotreload?]} _]
 
   [{:path "/ping"

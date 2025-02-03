@@ -3,19 +3,20 @@
    [integrant.core :as ig]))
 
 (def config
-  {:dev/hotreload? true
+  {::hotreload? true
 
-   :infra.db/sqlite {:file "data/libra.db"}
-   :infra.routes/hotreload {:hotreload? (ig/ref :dev/hotreload?)}
-   :infra/http {:port 3000
-                :handler (ig/ref :app.router/handler)
-                :on-start-ch (ig/ref :dev/on-start-ch)
-                :shutdown-timeout 5000}
+   :libra.infra.db/sqlite {:file "data/libra.db"}
+   :libra.infra.hotreload/hotreload {:hotreload? (ig/ref ::hotreload?)}
+   :libra.infra.http/server {:port 3000
+                             :handler (ig/ref :libra.app.router/handler)
+                             :on-start-ch (ig/ref :libra.app.core/on-start-ch)}
 
-   :app.views/layout {:hotreload? (ig/ref :dev/hotreload?)}
-   :app.routes/index {:layout (ig/ref :app.views/layout)}
+   :libra.app.core/on-start-ch {}
+   :libra.app.components/layout {:hotreload? (ig/ref ::hotreload?)}
 
-   :app.router/routes {:index (ig/ref :app.routes/index)
-                       :hotreload (ig/ref :infra.routes/hotreload)}
+   :libra.app.drivers.index/routes {:layout (ig/ref :libra.app.components/layout)}
 
-   :app.router/handler (ig/ref :app.router/routes)})
+   :libra.app.router/routes {:index (ig/ref :libra.app.drivers.index/routes)
+                             :hotreload (ig/ref :libra.infra.routes/hotreload)}
+
+   :libra.app.router/handler {:routes (ig/ref :libra.app.router/routes)}})
