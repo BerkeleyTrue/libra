@@ -49,7 +49,7 @@
 
   [{:path "/ping"
     :method :get
-    :get #(response/response "pong")}
+    :response #(response/response "pong")}
    {:path "/hotreload"
     :method :get
-    :get (->hotreload hotreload?)}])
+    :response (->hotreload hotreload?)}])

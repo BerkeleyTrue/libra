@@ -37,24 +37,25 @@
 (defact ->layout
   [hotreload?]
   [req & body]
-  (h/html
-   [:<>
-    [:$ "<!DOCTYPE html>"]
-    [:html
-     [:head
-      [:meta {:charset "utf-8"}]
-      [:meta {:name "viewport"
-              :content "width=device-width, initial-scale=1"}]
-      [:link {:rel "manifest" :href "/manifest.json"}]
-      (global-importmap)
-      ; (c/cljs-module "register-sw")
-      ; (when hotreload?
-      ;   (c/cljs-module "hotreload"))
-      [:style sty/*style*]]
-     [:body {:data-bs-theme "dark" :id "body"}
-      ; (hc/htmc)
-      (alert req)
-      body]]]))
+  (->> (h/html
+        [:<>
+         [:$ "<!DOCTYPE html>"]
+         [:html
+          [:head
+           [:meta {:charset "utf-8"}]
+           [:meta {:name "viewport"
+                   :content "width=device-width, initial-scale=1"}]
+           [:link {:rel "manifest" :href "/manifest.json"}]
+           (global-importmap)
+           ; (c/cljs-module "register-sw")
+           ; (when hotreload?
+           ;   (c/cljs-module "hotreload"))
+           [:style sty/*style*]]
+          [:body {:data-bs-theme "dark" :id "body"}
+           ; (hc/htmc)
+           (alert req)
+           body]]])
+       (str)))
 
 (comment
   ((->layout false) {} "foo"))

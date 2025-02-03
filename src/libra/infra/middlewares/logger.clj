@@ -21,6 +21,6 @@
         (catch Exception ex
           (let [end-ms (System/currentTimeMillis)
                 response-time (str (- end-ms start-ms) "ms")]
-            (log/error ex (str method " " uri " " " " response-time "ms - Error"))
+            (log/error ex (str method " " uri " " " " response-time " - Error"))
             (-> (response/response "Internal Server Error")
                 (response/status 500))))))))
