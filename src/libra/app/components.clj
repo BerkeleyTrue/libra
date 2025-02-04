@@ -52,7 +52,13 @@
            ; (when hotreload?
            ;   (c/cljs-module "hotreload"))
            [:style sty/*style*]]
-          [:body {:data-bs-theme "dark" :id "body"}
+          [:body {:id "body" :class "container"}
+           [:nav
+            [:ul
+             [:li [:strong "CorpusLibra"]]]
+            [:ul
+             [:li [:a {:href "/"} "Home"]]
+             [:li [:a {:href "/login"} "Login"]]]]
            ; (hc/htmc)
            (alert req)
            body]]])
