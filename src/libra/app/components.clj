@@ -1,14 +1,11 @@
 (ns libra.app.components
   (:require
    [cheshire.core :as json]
-   [borkdude.html :as h]
    [integrant.core :as ig]
+   [borkdude.html :as h]
+   [gaka.core :as gaka]
    [libra.infra.html :as hh]
-   [libra.utils.dep-macro :refer [defact]]
-   ; [libra.utils.session :as s]
-   ; [libra.utils.htmc :as hc]
-   [libra.view.style :as sty]))
-   ; [libra.view.core :as c]))
+   [libra.utils.dep-macro :refer [defact]]))
 
 (def squint-cdn-path "https://cdn.jsdelivr.net/npm/squint-cljs@0.8.114")
 
@@ -23,6 +20,13 @@
       "squint-cljs/src/squint/set.js" (str squint-cdn-path "/src/squint/set.js")
       "squint-cljs/src/squint/html.js" (str squint-cdn-path "/src/squint/html.js")}}
     {:pretty true})))
+
+
+(def ^:dynamic *style*
+  (gaka/css
+   [:#body
+    :width "100dvw"
+    :height "100dvh"]))
 
 (defn alert [req]
   (let [msg (get-in req [:flash :message])
@@ -51,7 +55,7 @@
            ; (c/cljs-module "register-sw")
            ; (when hotreload?
            ;   (c/cljs-module "hotreload"))
-           [:style sty/*style*]]
+           [:style *style*]]
           [:body {:id "body" :class "container"}
            [:nav
             [:ul

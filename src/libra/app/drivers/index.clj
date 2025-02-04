@@ -10,10 +10,19 @@
   [req]
   (->> (h/html
         [:div {:class "container"}
-         [:h1 "My Service"]
-         [:table
-          [:tr [:td "User"]
-           [:td "No user"]]]])
+         [:h1 "CorpusLibra"]
+         [:article
+          [:header
+            [:p "CorpusLibra is a web application for tracking your weight"]]
+          [:section
+            [:h2 "Features"]
+            [:ul
+             [:li "Track your weight"]
+             [:li "Track your body fat percentage"]
+             [:li "Track your muscle mass"]
+             [:li "Track your water weight"]]]]
+         [:footer
+           [:p "© 2021 CorpusLibra"]]])
        (layout req)
        (response/response)))
 
