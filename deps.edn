@@ -1,4 +1,4 @@
-{:paths ["src" "resources" "env"]
+{:paths ["src" "resources" "env" "public"]
  :deps {com.taoensso/timbre                 {:mvn/version "6.5.0"}
         integrant/integrant                 {:mvn/version "0.13.1"}
 

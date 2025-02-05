@@ -9,12 +9,21 @@
              [babashka.cli :as cli]
              [babashka.nrepl.server :as srv]
              [lread.status-line :as status])
-  :init (def opts
-          (merge (cli/parse-opts *command-line-args*)
-                 {:out-dir "out"
-                  :port 3000}))
+  :init (do
+          (def opts 
+            (merge (cli/parse-opts *command-line-args*)
+                   {:out-dir "out"
+                    :port 3000}))
+          (def tailwind-cmd "pnpm exec tailwindcss -i resources/css/style.css -o public/css/style.css"))
+
   :enter (let [{:keys [name]} (current-task)] (status/line :head ">==<TASK %s>==> %s" name (string/join " " *command-line-args*)))
   :leave (let [{:keys [name]} (current-task)] (status/line :detail "\n>==<TASK %s>==> done." name))
+
+  build:css (shell tailwind-cmd)
+
+  watch:css (shell (str tailwind-cmd " --watch"))
+  watch:squint (shell "pnpm exec squint watch")
+
   nrepl (do (srv/start-server! {:host "localhost"
                                 :port (or (:nrepl-server opts) 1337)})
             (spit ".nrepl-port" (str (or (:nrepl-server opts) 1337)))
@@ -22,7 +31,7 @@
                 (.addShutdownHook (Thread. (fn [] (fs/delete ".nrepl-port")))))
             (deref (promise)))
 
-  -dev {:depends [nrepl]}
+  -dev {:depends [nrepl watch:css watch:squint]}
 
   dev {:doc "Start development server with file watching and live reload."
        :extra-deps {integrant/repl  {:mvn/version "0.4.0"}}

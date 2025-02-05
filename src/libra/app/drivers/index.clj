@@ -13,16 +13,14 @@
          [:h1 "CorpusLibra"]
          [:article
           [:header
-            [:p "CorpusLibra is a web application for tracking your weight"]]
+           [:p "CorpusLibra is a web application for tracking your weight"]]
           [:section
-            [:h2 "Features"]
-            [:ul
-             [:li "Track your weight"]
-             [:li "Track your body fat percentage"]
-             [:li "Track your muscle mass"]
-             [:li "Track your water weight"]]]]
-         [:footer
-           [:p "© 2021 CorpusLibra"]]])
+           [:h2 "Features"]
+           [:ul
+            [:li "Track your weight"]
+            [:li "Track your body fat percentage"]
+            [:li "Track your muscle mass"]
+            [:li "Track your water weight"]]]]])
        (layout req)
        (response/response)))
 
@@ -30,4 +28,4 @@
   [_ {:keys [layout]}]
   [{:path "/"
     :method :get
-    :response (->page layout)}]) 
+    :response (->page layout)}])

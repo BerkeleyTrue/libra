@@ -128,7 +128,7 @@
   "Actual serving function that is used in the router"
   [req]
   (log/info "static")
-  (let [path (str "resources/" (str/replace-first (URLDecoder/decode (:uri req) "UTF-8") #"^/public/" ""))
+  (let [path (str/replace-first (URLDecoder/decode (:uri req) "UTF-8") #"^/" "")
         f (fs/path path)]
     (cond (fs/readable? f) (create-body f)
           :else (response/not-found "File not found")))) 

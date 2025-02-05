@@ -1,0 +1,15 @@
+{
+  "name": "libra",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.3",
+    "squint-cljs": "^0.8.132",
+    "tailwindcss": "^4.0.3"
+  }
+}

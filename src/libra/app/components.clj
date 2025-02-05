@@ -50,22 +50,28 @@
            [:meta {:name "viewport"
                    :content "width=device-width, initial-scale=1"}]
            [:link {:rel "manifest" :href "/manifest.json"}]
-           [:link {:rel "stylesheet" :href "/public/css/pico.min.css"}]
+           [:link {:rel "stylesheet" :href "/public/css/style.css"}]
            (global-importmap)
            ; (c/cljs-module "register-sw")
            ; (when hotreload?
            ;   (c/cljs-module "hotreload"))
            [:style *style*]]
-          [:body {:id "body" :class "container"}
-           [:nav
-            [:ul
+          [:body {:id "body" :class "w-dvw h-dvh flex flex-col items-center"}
+           [:nav {:class "w-full bg-gray-800 text-white h-12 flex justify-between items-center px-8"}
+            [:ul {:class "flex justify-between items-center h-12"}
              [:li [:strong "CorpusLibra"]]]
-            [:ul
-             [:li [:a {:href "/"} "Home"]]
-             [:li [:a {:href "/login"} "Login"]]]]
+            [:ul {:class "flex justify-between items-center h-12"}
+             [:li {:class "mr-2"}
+              [:a {:href "/"} "Home"]]
+             [:li {:class "mr-2"}
+              [:a {:href "/login"} "Login"]]]]
            ; (hc/htmc)
            (alert req)
-           body]]])
+           [:div {:class "w-full flex-grow flex flex-col items-center"} 
+            body]
+           [:footer {:class "w-full bg-gray-800 text-white h-12 flex items-center px-8"}
+             [:p "© 2021 CorpusLibra"]]]]])
+            
        (str)))
 
 (comment

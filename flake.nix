@@ -40,6 +40,8 @@
             babashka
             clojure
             clojure-lsp
+            pnpm
+            nodejs
           ];
         };
       };
