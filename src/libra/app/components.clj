@@ -21,7 +21,6 @@
       "squint-cljs/src/squint/html.js" (str squint-cdn-path "/src/squint/html.js")}}
     {:pretty true})))
 
-
 (def ^:dynamic *style*
   (gaka/css
    [:#body
@@ -37,6 +36,12 @@
       (h/html
        [:div {:role "alert" :& cls}
         msg]))))
+
+(defn link [href body]
+  (h/html
+   [:a {:href href
+        :class "block text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none text-white/60 hover:text-white/80 focus:text-white/80 active:text-white/80 lg:px-2"}
+    body]))
 
 (defact ->layout
   [hotreload?]
@@ -56,22 +61,22 @@
            ; (when hotreload?
            ;   (c/cljs-module "hotreload"))
            [:style *style*]]
-          [:body {:id "body" :class "w-dvw h-dvh flex flex-col items-center"}
-           [:nav {:class "w-full bg-gray-800 text-white h-12 flex justify-between items-center px-8"}
-            [:ul {:class "flex justify-between items-center h-12"}
+          [:body {:id "body" :class "w-dvw h-dvh flex flex-col items-center bg-fuchsia-200 text-black"}
+           [:nav {:class "w-full bg-purple-300 h-12 flex justify-between items-center px-8 shadow-md "}
+            [:ul {:class "flex justify-between items-center h-12 text-fuchsia-100"}
              [:li [:strong "CorpusLibra"]]]
             [:ul {:class "flex justify-between items-center h-12"}
              [:li {:class "mr-2"}
-              [:a {:href "/"} "Home"]]
+              (link "/" "Home")]
              [:li {:class "mr-2"}
               [:a {:href "/login"} "Login"]]]]
            ; (hc/htmc)
            (alert req)
-           [:div {:class "w-full flex-grow flex flex-col items-center"} 
+           [:div {:class "w-full flex-grow flex flex-col items-center"}
             body]
-           [:footer {:class "w-full bg-gray-800 text-white h-12 flex items-center px-8"}
-             [:p "© 2021 CorpusLibra"]]]]])
-            
+           [:footer {:class "w-full bg-purple-200 h-12 flex items-center px-8"}
+            [:p "© 2021 CorpusLibra"]]]]])
+
        (str)))
 
 (comment
