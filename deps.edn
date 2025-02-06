@@ -12,7 +12,6 @@
         ring/ring-anti-forgery              {:mvn/version "1.4.0"}
 
         io.github.borkdude/html             {:mvn/version "0.1.1"}
-        ; squint/squint                       {:git/url "https://github.com/squint-cljs/squint" :git/sha "c86d83bd3741a710e2f80fecd413801ddd456e64"}
         gaka/gaka                           {:mvn/version "0.3.0"}
 
         cheshire/cheshire                   {:mvn/version "5.13.0"}
