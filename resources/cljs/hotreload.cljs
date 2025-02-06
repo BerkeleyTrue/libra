@@ -1,27 +1,32 @@
 (def timestamp (atom 0))
 
-(defn fetch-timestamp []
-  (->
-   (js/fetch (str "/hotreload?last-modified=" @timestamp))
-   (.then #(.text %))))
+(defn init-hot-reload []
+  (js/console.log "Hotreload running")
+  (if (= (js/typeof js/EventSource) js/undefined)
+    (js/console.log "EventSource not supported")
 
-(defn set-initial-timestamp [text]
-  (js/console.log "initial " text)
-  (reset! timestamp text))
+    (let [source (js/EventSource. "/__hotreload")]
+      (set! (.-onopen source)
+            (fn handle-open [_event]
+              (js/console.log "hotreload: open")))
 
-(defn reload [new-timestamp]
-  (js/console.log "reload " new-timestamp)
-  (when (not= @timestamp new-timestamp)
-    (js/location.reload)))
+      (set! (.-onmessage source)
+            (fn handle-message [event]
+              (let [data (js/JSON.parse (.-data event))]
+                (js/console.log "hotreload: message" data))))
+                ; (case (.-data event)
+                ;   "updated" (do (js/console.log "hotreload: updated")
+                ;                 (.close source)
+                ;                 (js/setTimeout #(-> js/window .-location .reload) 500))
+                ;   "connected" (js/console.log "hotreload: connected")
+                ;   (js/console.log "hotreload: unknown event" event)))))
 
-(defn repl []
-  (->
-   (fetch-timestamp)
-   (.then reload)
-   (.finally #(js/setTimeout repl 600))))
+      (set! (.-onerror source) 
+            (fn handle-error [event]
+              (js/console.log "hotreload: err" (or (.-message event) event))
+              (.close source)
+              (js/setTimeout init-hot-reload 1000)))
 
-(js/console.log "Hotreload running")
-(->
- (fetch-timestamp)
- (.then set-initial-timestamp)
- (.then repl))
+      (js/addEventListener "beforeunload" #(do (.close source) true)))))
+
+(js/setTimeout init-hot-reload 1000)

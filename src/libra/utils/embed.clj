@@ -5,7 +5,7 @@
 
 (defn js-module [filename]
   (let [full-filename (str "public/js/" filename ".mjs")]
-    (script {:type "module"}
+    (script "module"
             (-> full-filename
                 (fs/file)
                 (slurp)

@@ -5,6 +5,7 @@
    [borkdude.html :as h]
    [gaka.core :as gaka]
    [libra.infra.html :as hh]
+   [libra.utils.embed :refer [js-module]]
    [libra.utils.dep-macro :refer [defact]]))
 
 (def squint-cdn-path "https://cdn.jsdelivr.net/npm/squint-cljs@0.8.114")
@@ -58,8 +59,8 @@
            [:link {:rel "stylesheet" :href "/public/css/style.css"}]
            (global-importmap)
            ; (c/cljs-module "register-sw")
-           ; (when hotreload?
-           ;   (c/cljs-module "hotreload"))
+           (when hotreload?
+             (js-module "hotreload"))
            [:style *style*]]
           [:body {:id "body" :class "w-dvw h-dvh flex flex-col items-center bg-fuchsia-200 text-black"}
            [:nav {:class "w-full bg-purple-300 h-12 flex justify-between items-center px-8 shadow-md "}

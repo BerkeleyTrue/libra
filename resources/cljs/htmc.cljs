@@ -6,6 +6,5 @@
      #(let [el# (.querySelector js/document (or frame.contentWindow.location.hash nil))]
         (el#.replaceWith.apply el# frame.contentDocument.body.childNodes)))))
 
-(->
- (js/document.getElementById "htmc")
- (.addEventListener "load" htmc))
+(-> (js/document.getElementById "htmc")
+    (.addEventListener "load" htmc))
