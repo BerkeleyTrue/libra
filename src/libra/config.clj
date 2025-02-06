@@ -7,7 +7,8 @@
    :libra.env/hotreload? {}
 
    ; :libra.infra.db/sqlite {:file "data/libra.db"}
-   :libra.infra.hotreload/routes {:hotreload? (ig/ref :libra.env/hotreload?)}
+   :libra.infra.hotreload/routes {:hotreload? (ig/ref :libra.env/hotreload?)
+                                  :on-start-ch (ig/ref :libra.app.core/on-start-ch)}
    :libra.infra.static/routes {}
    :libra.infra.http/server {:port 3000
                              :handler (ig/ref :libra.app.router/handler)
