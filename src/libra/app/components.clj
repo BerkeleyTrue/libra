@@ -45,10 +45,10 @@
                    "hover:text-black/80 hover:ease-in-out "
                    "focus:text-black/80 active:text-black/80 motion-reduce:transition-none "
                    "text-white/60 hover:text-white/80 focus:text-white/80 active:text-white/80 lg:px-2")]
-   (h/html
-    [:a {:href href
-         :& {:class class}}
-     body])))
+    (h/html
+     [:a {:href href
+          :& {:class class}}
+      body])))
 
 (defact ->layout
   [hotreload?]
@@ -63,13 +63,9 @@
                    :content "width=device-width, initial-scale=1"}]
            [:link {:rel "manifest" :href "/manifest.json"}]
            [:link {:rel "stylesheet" :href "/public/css/style.css"}]
-           (global-importmap)
-           ; (c/cljs-module "register-sw")
-           (when hotreload?
-             (js-module "hotreload"))
            [:style *style*]]
           [:body {:id "body" :class "w-dvw h-dvh flex flex-col items-center bg-fuchsia-200 text-black"}
-           [:nav {:class "w-full bg-purple-300 h-12 flex justify-between items-center px-8 shadow-md "}
+           [:nav {:class "w-full bg-purple-300 h-12 flex justify-between items-center px-8 shadow-md " :hx-boost "true"}
             [:ul {:class "flex justify-between items-center h-12 text-fuchsia-100"}
              [:li {:class "w-full h-full"}
               [:a {:href "/" :class "w-full h-full flex items-center justify-center"}
@@ -84,7 +80,12 @@
            [:div {:class "w-full flex-grow flex flex-col items-center"}
             body]
            [:footer {:class "w-full bg-purple-200 h-12 flex items-center px-8"}
-            [:p "© 2021 CorpusLibra"]]]]])
+            [:p "© 2021 CorpusLibra"]]
+
+           [:script {:src "/public/js/htmx.js"}]
+           (global-importmap)
+           (when hotreload?
+             (js-module "hotreload"))]]])
 
        (str)))
 
