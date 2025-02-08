@@ -1,8 +1,11 @@
 (def clj-ts (atom 0))
 (def cljs-ts (atom 0))
 
+(def debug? false)
+
 (defn log [& args]
-  (.apply (.-log js/console) js/console (into-array (cons "[hotreload]" args))))
+  (when debug?
+    (.apply (.-log js/console) js/console (into-array (cons "[hotreload]" args)))))
 
 (reset! clj-ts (or (js/localStorage.getItem "libra.clj-ts") 0))
 (reset! cljs-ts (or (js/localStorage.getItem "libra.cljs-ts") 0))
