@@ -1,2 +1,3 @@
 {:paths ["resources/cljs"]
+ :copy-resources [:js]
  :output-dir "public/js"}
