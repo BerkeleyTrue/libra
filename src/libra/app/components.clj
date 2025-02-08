@@ -64,7 +64,8 @@
                    :content "width=device-width, initial-scale=1"}]
            [:link {:rel "manifest" :href "/manifest.json"}]
            [:link {:rel "stylesheet" :href "/public/css/style.css"}]
-           [:style *style*]]
+           [:style *style*]
+           (global-importmap)]
           [:body {:id "body" :class "w-dvw h-dvh flex flex-col items-center bg-fuchsia-200 text-black"}
            [:nav {:class "w-full bg-purple-300 h-12 flex justify-between items-center px-8 shadow-md " :hx-boost "true"}
             [:ul {:class "flex justify-between items-center h-12 text-fuchsia-100"}
@@ -84,7 +85,6 @@
             [:p "© 2021 CorpusLibra"]]
 
            [:script {:src "/public/js/htmx.js"}]
-           (global-importmap)
            (when hotreload?
              (js-module "hotreload"))]]])
 
