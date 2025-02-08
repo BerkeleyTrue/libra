@@ -15,19 +15,12 @@
        (map #(.lastModified %))))
 
 (defn last-modified []
-  (let [cljs-ts (get-directory-timestamps "cljs")
-        src-ts (get-directory-timestamps "libra")
-        ts (concat cljs-ts src-ts)]
-    (if (seq ts)
-      (apply max ts)
-      0)))
+  (let [cljs-ts (apply max (get-directory-timestamps "cljs"))
+        clj-ts (apply max (get-directory-timestamps "libra"))]
+    {:cljs cljs-ts
+     :clj clj-ts}))
 
 (comment (last-modified))
-
-(defn modified? [last-timestamp]
-  (not= (Long. last-timestamp) (last-modified)))
-
-(comment (modified? 0))
 
 (defn ->message [data]
   (str "data: " (json/encode data) "\n\n"))
@@ -35,37 +28,35 @@
 (defact ->hotreload
   [on-start-ch]
   [req]
-  (let [last-timestamp (last-modified)]
-    (server/as-channel
-     req
-     {:init (fn [ch]
-              (server/send!
-               ch
-               (-> (response/response (->message {:type "connected"
-                                                  :last-modified last-timestamp}))
-                   (response/content-type "text/event-stream")
-                   (response/header "Cache-Control" "no-cache")
-                   (response/header "Connection" "keep-alive"))
-               false))
+  (server/as-channel
+   req
+   {:init (fn [ch]
+            (server/send!
+             ch
+             (-> (response/response (->message {:type "connected"
+                                                :data (last-modified)}))
+                 (response/content-type "text/event-stream")
+                 (response/header "Cache-Control" "no-cache")
+                 (response/header "Connection" "keep-alive"))
+             false))
 
-      :on-open (fn [ch]
-                 (go
-                   (loop []
-                     (<! on-start-ch)
-                     (let [last-modified (last-modified)]
-                       (server/send! ch (->message {:type "server-restart"
-                                                    :last-modified last-modified})))
-                     (recur)))
-                 (go
-                   (loop []
-                     (Thread/sleep 5000)
-                     (server/send! ch (->message {:type "loop"
-                                                  :last-modified (last-modified)}) false)
-                     (recur))))
+    :on-open (fn [ch]
+               (go
+                 (loop []
+                   (<! on-start-ch)
+                   (server/send! ch (->message {:type "server-restart"
+                                                :data (last-modified)}))
+                   (recur)))
+               (go
+                 (loop []
+                   (Thread/sleep 5000)
+                   (server/send! ch (->message {:type "loop"
+                                                :data (last-modified)}) false)
+                   (recur))))
 
-      :on-message (fn [_ch msg] (println :on-message msg))
+    :on-message (fn [_ch msg] (println :on-message msg))
 
-      :on-close (fn [_ch status-code] (println :on-close status-code))})))
+    :on-close (fn [_ch status-code] (println :on-close status-code))}))
 
 (defmethod ig/init-key ::routes
   [_ {:keys [on-start-ch]}]

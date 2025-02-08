@@ -1,26 +1,42 @@
-(def timestamp (atom 0))
+(def clj-ts (atom 0))
+(def cljs-ts (atom 0))
 
-(defn log [msg]
-  (js/console.log (str "[hotreload] " msg)))
+(defn log [& args]
+  (.apply (.-log js/console) js/console (into-array (cons "[hotreload]" args))))
 
-(reset! timestamp (or (js/localStorage.getItem "libra_timestamp") 0))
+(reset! clj-ts (or (js/localStorage.getItem "libra.clj-ts") 0))
+(reset! cljs-ts (or (js/localStorage.getItem "libra.cljs-ts") 0))
 
-(add-watch timestamp :watcher (fn [_key _ts _old new-val]
-                                (js/localStorage.setItem "libra_timestamp" new-val)))
+(add-watch clj-ts :watcher-clj
+           (fn [_key _ts _old new-val]
+             (js/localStorage.setItem "libra_clj-ts" new-val)))
 
-(defn update-empty-ts [ts]
-  (when (zero? @timestamp)
-    (reset! timestamp ts)))
+(add-watch cljs-ts :watcher-cljs
+           (fn [_key _ts _old new-val]
+             (js/localStorage.setItem "libra.cljs-ts" new-val)))
 
-(defn should-reload [ts]
-  (if (> ts @timestamp)
+(defn update-empty-ts [{:keys [cljs clj]}]
+  (when (zero? @clj-ts)
+    (reset! clj-ts clj))
+  (when (zero? @cljs-ts)
+    (reset! cljs-ts cljs)))
+
+(defn should-reload-clj [{:keys [clj]}]
+  (if (> clj @clj-ts)
     (do
-      (reset! timestamp ts)
+      (reset! clj-ts clj)
+      true)
+    false))
+
+(defn should-reload-cljs [{:keys [cljs]}]
+  (if (> cljs @cljs-ts)
+    (do
+      (reset! cljs-ts cljs)
       true)
     false))
 
 (defn init-hot-reload []
-  (log (str "running with last timestamp: " @timestamp))
+  (log "running with last timestamp: " @clj-ts @cljs-ts)
   (if (= (js/typeof js/EventSource) js/undefined)
     (log "EventSource not supported")
 
@@ -31,14 +47,23 @@
 
       (set! (.-onmessage source)
             (fn handle-message [event]
-              (let [{:keys [type last-modified]} (js/JSON.parse (.-data event))]
-                (log (str "type: " type " last-modified: " last-modified))
-                (update-empty-ts last-modified)
-                (when (= type "server-restart")
-                  (log "server restart")
-                  (when (should-reload last-modified)
-                    (.close source)
-                    (js/setTimeout #(-> js/window .-location .reload) 500))))))
+              (let [{:keys [type data]} (js/JSON.parse (.-data event))]
+                (log "type: " type " last-modified: " data)
+                (update-empty-ts data)
+                (cond
+                  (= type "server-restart")
+                  (do
+                    (log "server restart")
+                    (when (should-reload-clj data)
+                      (.close source)
+                      (js/setTimeout #(-> js/window .-location .reload) 500)))
+
+                  (= type "loop")
+                  (do
+                    (log "loop")
+                    (when (should-reload-cljs data)
+                      (.close source)
+                      (js/setTimeout #(-> js/window .-location .reload) 500)))))))
 
       (set! (.-onerror source)
             (fn handle-error [event]

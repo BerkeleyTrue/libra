@@ -1,2 +1,2 @@
-{:paths ["resources/cljs" "node_modules/@squint-cljs/macros/src"]
+{:paths ["resources/cljs"]
  :output-dir "public/js"}
