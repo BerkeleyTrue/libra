@@ -1,5 +1,7 @@
 (ns libra-chart
-  (:require ["chart.js/auto" :as chart]))
+  (:require ["chart.js" :as chart]))
+
+(apply chart/Chart.register chart/registerables)
 
 (def data
   [{:date "2024-01-01" :weight 256}
@@ -23,13 +25,13 @@
    {:date "2024-02-24" :weight 221}
    {:date "2024-02-27" :weight 220}])
 
-(chart.
+(chart/Chart.
  (js/document.getElementById "libra")
  {:type "line"
   :data
-  {:labels (map :date data)
+  {:labels (into [] (map :date data))
    :datasets [{:label "Weight"
-               :data (map :weight data)
+               :data (into [] (map :weight data))
                :fill false
                :borderColor "rgb(75, 192, 192)"
                :lineTension 0.1}]}})
