@@ -15,11 +15,12 @@
    "importmap"
    (json/encode
     {:imports
-     {:squint-cljs/core.js (str squint-cdn-path "/src/squint/core.js")
-      :squint-cljs/string.js (str squint-cdn-path "/src/squint/string.js")
+     {"squint-cljs/core.js" (str squint-cdn-path "/src/squint/core.js")
+      "squint-cljs/string.js" (str squint-cdn-path "/src/squint/string.js")
       "squint-cljs/src/squint/string.js" (str squint-cdn-path "/src/squint/string.js")
       "squint-cljs/src/squint/set.js" (str squint-cdn-path "/src/squint/set.js")
-      "squint-cljs/src/squint/html.js" (str squint-cdn-path "/src/squint/html.js")}}
+      "squint-cljs/src/squint/html.js" (str squint-cdn-path "/src/squint/html.js")
+      "chart.js" "/public/js/chart.js"}}
     {:pretty true})))
 
 (def ^:dynamic *style*
