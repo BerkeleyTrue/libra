@@ -1,7 +1,4 @@
-(ns libra-chart
-  (:require ["chart.js" :as chart]))
-
-(apply chart/Chart.register chart/registerables)
+; (apply chart/Chart.register chart/registerables)
 
 (def data
   [{:date "2024-01-01" :weight 256}
@@ -25,7 +22,7 @@
    {:date "2024-02-24" :weight 221}
    {:date "2024-02-27" :weight 220}])
 
-(chart/Chart.
+(Chart.
  (js/document.getElementById "libra")
  {:type "line"
   :data

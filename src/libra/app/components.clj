@@ -19,8 +19,7 @@
       "squint-cljs/string.js" (str squint-cdn-path "/src/squint/string.js")
       "squint-cljs/src/squint/string.js" (str squint-cdn-path "/src/squint/string.js")
       "squint-cljs/src/squint/set.js" (str squint-cdn-path "/src/squint/set.js")
-      "squint-cljs/src/squint/html.js" (str squint-cdn-path "/src/squint/html.js")
-      "chart.js" "/public/js/chart.js"}}
+      "squint-cljs/src/squint/html.js" (str squint-cdn-path "/src/squint/html.js")}}
     {:pretty true})))
 
 (def ^:dynamic *style*
@@ -85,6 +84,7 @@
             [:p "© 2021 CorpusLibra"]]
 
            [:script {:src "/public/js/htmx.js"}]
+           [:script {:src "/public/js/chart.js"}]
            (when hotreload?
              (js-module "hotreload"))]]])
 
