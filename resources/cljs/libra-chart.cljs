@@ -1,9 +1,9 @@
 (ns libra-chart
   (:require ["chart.js" :as chart]
             ["chartjs-adapter-date-fns"]
-            ["chartjs-plugin-zoom$default" :as zoom]))
+            ["chartjs-plugin-zoom$default" :as zoom]
+            ["date-fns" :as date-fns]))
 
-(js/console.log chart/registerables zoom)
 (apply (.-register chart/Chart) (into [] (conj chart/registerables zoom)))
 
 (def data
@@ -43,7 +43,17 @@
                 {:x {:type "time"
                      :time {:unit "day"
                             :displayFormats {:day "MMM d"}}
-                     :ticks {:stepSize 3}}
+                     :ticks {:stepSize 3}
+                     :min (-> data
+                              last
+                              :date
+                              (date-fns/parse "yyyy-MM-dd" (js/Date.))
+                              (date-fns/subDays 4))
+                     :max (-> data
+                              last
+                              :date
+                              (date-fns/parse "yyyy-MM-dd" (js/Date.))
+                              (date-fns/addDays 2))}
                  :y {:min 0
                      :max 300
                      :ticks {:stepSize 25}
@@ -55,6 +65,8 @@
                                :pinch {:enabled true}}}
                  :limits {:x {:minRange (* 7 24 60 60 1000)}}}}}))
 
-; (let [lastDate (-> data last :date)]
-;   (doto chart
-;     (.zoomScale "x" {:min (.lastDate)})))
+; (let [lastDate (-> data last :date)
+;       lastDate (date-fns/parse lastDate "yyyy-MM-dd" (js/Date.))
+;       sevenDaysInMs (* 7 24 60 60 1000)]
+;   (.zoomScale myChart "x" {:min (js/Date. "2024-02-20")
+;                            :max (js/Date. "2024-03-4")}))
