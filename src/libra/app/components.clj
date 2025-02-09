@@ -84,6 +84,7 @@
            [:script {:src "/public/js/htmx.js"}]
            [:script {:src "/public/js/chart.js"}]
            [:script {:src "/public/js/chartjs-plugin-zoom.js"}]
+           [:script {:src "/public/js/chartjs-plugin-date-fns.js"}]
            (when hotreload?
              (js-module "hotreload"))]]])
 

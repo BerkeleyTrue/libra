@@ -10,8 +10,8 @@
   [layout]
   [req]
 
-  (->> [:div {:class "container"}
-        [:canvas {:id "libra"}]
+  (->> [:div {:class "container w-full h-full"}
+        [:canvas {:id "libra" :class "w-full h-full" :style "width: 100%; height: 100%;"}]
         (js-module "libra-chart")]
        (h/html)
        (layout req)
