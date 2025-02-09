@@ -20,9 +20,12 @@
   :leave (let [{:keys [name]} (current-task)] (status/line :detail "\n>==<TASK %s>==> done." name))
 
   build:css (shell tailwind-cmd)
+  build:cljs (shell "pnpm exec squint compile")
+  build:js (shell "pnpm exec rollup -c")
 
   watch:css (shell (str tailwind-cmd " --watch"))
-  watch:squint (shell "pnpm exec squint watch")
+  watch:cljs (shell "pnpm exec squint watch")
+  watch:js (shell "pnpm exec rollup -c -w")
 
   nrepl (do (srv/start-server! {:host "localhost"
                                 :port (or (:nrepl-server opts) 1337)})
@@ -31,7 +34,7 @@
                 (.addShutdownHook (Thread. (fn [] (fs/delete ".nrepl-port")))))
             (deref (promise)))
 
-  -dev {:depends [nrepl watch:css watch:squint]}
+  -dev {:depends [nrepl watch:css watch:cljs watch:js]}
 
   dev {:doc "Start development server with file watching and live reload."
        :extra-deps {integrant/repl  {:mvn/version "0.4.0"}}

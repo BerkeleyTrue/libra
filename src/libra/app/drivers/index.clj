@@ -12,7 +12,7 @@
 
   (->> [:div {:class "container w-full h-full"}
         [:canvas {:id "libra" :class "w-full h-full" :style "width: 100%; height: 100%;"}]
-        (js-module "libra-chart")]
+        (js-module "libra-chart.bundle")]
        (h/html)
        (layout req)
        (response/response)))
