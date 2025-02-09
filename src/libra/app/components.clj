@@ -66,6 +66,10 @@
            [:style *style*]
            (global-importmap)]
           [:body {:id "body" :class "w-dvw h-dvh flex flex-col items-center bg-fuchsia-200 text-black"}
+           ; (hc/htmc)
+           (alert req)
+           [:div {:class "w-full flex-grow flex flex-col items-center"}
+            body]
            [:nav {:class "w-full bg-purple-300 h-12 flex justify-between items-center px-8 shadow-md " :hx-boost "true"}
             [:ul {:class "flex justify-between items-center h-12 text-fuchsia-100"}
              [:li {:class "w-full h-full"}
@@ -76,15 +80,10 @@
               (link "/" "Home")]
              [:li {:class "mr-2 w-full h-full"}
               (link "/login" "Login")]]]
-           ; (hc/htmc)
-           (alert req)
-           [:div {:class "w-full flex-grow flex flex-col items-center"}
-            body]
-           [:footer {:class "w-full bg-purple-200 h-12 flex items-center px-8"}
-            [:p "© 2021 CorpusLibra"]]
 
            [:script {:src "/public/js/htmx.js"}]
            [:script {:src "/public/js/chart.js"}]
+           [:script {:src "/public/js/chartjs-plugin-zoom.js"}]
            (when hotreload?
              (js-module "hotreload"))]]])
 

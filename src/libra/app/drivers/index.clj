@@ -9,7 +9,7 @@
 (defact ->page
   [layout]
   [req]
-  
+
   (->> [:div {:class "container"}
         [:canvas {:id "libra"}]
         (js-module "libra-chart")]

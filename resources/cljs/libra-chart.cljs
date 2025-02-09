@@ -1,4 +1,10 @@
-; (apply chart/Chart.register chart/registerables)
+(defn get-module [module]
+  (get js/window module))
+
+(def Chart (get-module "Chart"))
+(def Zoom (get-module "Zoom"))
+
+; (.register Chart Zoom)
 
 (def data
   [{:date "2024-01-01" :weight 256}
@@ -31,4 +37,14 @@
                :data (into [] (map :weight data))
                :fill false
                :borderColor "rgb(75, 192, 192)"
-               :lineTension 0.1}]}})
+               :lineTension 0.1}]}
+  :options
+  {:scales
+   {:y {:min 0
+        :max 300
+        :ticks {:stepSize 10}}}
+   :plugins
+   {:zoom 
+    {:pan {:enabled true}
+     :zoom {:wheel {:enabled true}
+            :pinch {:enabled true}}}}}})
