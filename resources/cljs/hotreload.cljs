@@ -12,7 +12,7 @@
 
 (add-watch clj-ts :watcher-clj
            (fn [_key _ts _old new-val]
-             (js/localStorage.setItem "libra_clj-ts" new-val)))
+             (js/localStorage.setItem "libra.clj-ts" new-val)))
 
 (add-watch cljs-ts :watcher-cljs
            (fn [_key _ts _old new-val]
