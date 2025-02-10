@@ -7,8 +7,7 @@
             [ring.middleware.params :as p]
             [ring.middleware.flash :as f]
             [libra.utils.dep-macro :refer [defact]]
-            [libra.infra.middlewares.logger :as logger]
-            [libra.infra.middlewares.transit :as transit]))
+            [libra.infra.middlewares.logger :as logger]))
 
 (defact ->handler
   [routes]
@@ -19,8 +18,7 @@
   (into [] (concat [af/wrap-anti-forgery
                     f/wrap-flash
                     s/wrap-session
-                    p/wrap-params
-                    transit/wrap-transit]
+                    p/wrap-params]
                    env-middleware
                    [logger/logger])))
 
