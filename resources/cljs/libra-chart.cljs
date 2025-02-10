@@ -2,9 +2,10 @@
   (:require ["chart.js" :as chart]
             ["chartjs-adapter-date-fns"]
             ["chartjs-plugin-zoom$default" :as zoom]
+            ["chartjs-plugin-annotation$default" :as annotations]
             ["date-fns" :as date-fns]))
 
-(apply (.-register chart/Chart) (into [] (conj chart/registerables zoom)))
+(apply (.-register chart/Chart) (into [] (concat chart/registerables [zoom annotations])))
 
 (def data
   [{:date "2024-01-01" :weight 256}
