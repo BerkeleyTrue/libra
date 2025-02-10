@@ -1,14 +1,14 @@
 (ns libra.app.router
-  (:require
-   [taoensso.timbre :as log]
-   [ruuter.core :as ruuter]
-   [integrant.core :as ig]
-   [ring.middleware.anti-forgery :as af]
-   [ring.middleware.session :as s]
-   [ring.middleware.params :as p]
-   [ring.middleware.flash :as f]
-   [libra.utils.dep-macro :refer [defact]]
-   [libra.infra.middlewares.logger :as logger]))
+  (:require [taoensso.timbre :as log]
+            [ruuter.core :as ruuter]
+            [integrant.core :as ig]
+            [ring.middleware.anti-forgery :as af]
+            [ring.middleware.session :as s]
+            [ring.middleware.params :as p]
+            [ring.middleware.flash :as f]
+            [libra.utils.dep-macro :refer [defact]]
+            [libra.infra.middlewares.logger :as logger]
+            [libra.infra.middlewares.transit :as transit]))
 
 (defact ->handler
   [routes]
@@ -19,7 +19,8 @@
   (into [] (concat [af/wrap-anti-forgery
                     f/wrap-flash
                     s/wrap-session
-                    p/wrap-params]
+                    p/wrap-params
+                    transit/wrap-transit]
                    env-middleware
                    [logger/logger])))
 
