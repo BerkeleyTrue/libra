@@ -2,7 +2,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 
 export default {
-  input: "public/js/libra-chart.mjs",
+  input: "public/js/libra_chart.mjs",
   output: {
     file: "public/js/libra-chart.bundle.mjs",
     format: "esm",
