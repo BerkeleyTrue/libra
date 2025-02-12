@@ -1,6 +1,7 @@
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import replace from "@rollup/plugin-replace";
+import json from "@rollup/plugin-json";
 
 export default {
   input: "public/js/libra_chart.mjs",
@@ -13,13 +14,18 @@ export default {
     replace({
       preventAssignment: true,
       values: {
-        'process.env.NODE_ENV': JSON.stringify('production')
-      }
+        "process.env.NODE_ENV": JSON.stringify("production"),
+      },
     }),
-    nodeResolve(),
+    nodeResolve({
+      browser: true,
+      preferBuiltins: false,
+      mainFields: ["browser", "module", "main"],
+    }),
     commonjs({
       defaultIsModuleExports: true,
     }),
+    json(),
   ],
   external: ["squint-cljs", "squint-cljs/core.js"],
 };
