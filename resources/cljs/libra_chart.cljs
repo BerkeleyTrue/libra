@@ -5,7 +5,8 @@
    ["chartjs-plugin-zoom$default" :as zoom]
    ["chartjs-plugin-annotation$default" :as annotations]
    ["date-fns" :as date-fns]
-   ["mobx" :as mobx]))
+   ["mobx" :as mobx]
+   ["axios$default" :as axios]))
 
 (apply (.-register chart/Chart) (into [] (concat chart/registerables [zoom annotations])))
 
@@ -40,17 +41,13 @@
                               :data
                               last
                               :date
-                              (if
-                                (date-fns/parse "yyyy-MM-dd" (js/Date.))
-                                (js/Date.))
+                              (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
                               (date-fns/subDays 4))
                      :max (-> @store
                               :data
                               last
                               :date
-                              (if
-                                (date-fns/parse "yyyy-MM-dd" (js/Date.))
-                                (js/Date.))
+                              (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
                               (date-fns/addDays 2))}
                  :y {:min (-> @store
                               :data
@@ -62,7 +59,7 @@
                      :max (-> @store
                               :data
                               last
-                              :weight 
+                              :weight
                               (or 100)
                               (+ 25))
                      :ticks {:stepSize 25}
@@ -73,6 +70,11 @@
                         :zoom {:wheel {:enabled true}
                                :pinch {:enabled true}}}
                  :limits {:x {:minRange (* 7 24 60 60 1000)}}}}}))
+
+(-> (axios/get "/api/data"
+               {:responseType "json"})
+    (.then (fn [response]
+             (swap! store assoc :data (-> response :data)))))
 
 (mobx/autorun
  (fn []
