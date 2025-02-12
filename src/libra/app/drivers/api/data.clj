@@ -1,6 +1,7 @@
 (ns libra.app.drivers.api.data
   (:require
    [integrant.core :as ig]
+   [cheshire.core :as json]
    [libra.infra.ring :as response]
    [libra.utils.dep-macro :refer [defact]]))
 
@@ -28,10 +29,11 @@
               {:date "2024-02-24" :weight 221}
               {:date "2024-02-27" :weight 220}]]
     (-> data
+        (json/encode) 
         (response/json))))
 
 (defmethod ig/init-key ::routes
   [_ _]
-  [{:path "/data"
+  [{:path "/api/data"
     :method :get
     :response (->data)}])
