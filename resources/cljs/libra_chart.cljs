@@ -15,55 +15,69 @@
    (atom
     {:data []})))
 
+(defn ->labels [data]
+  (->> data
+       (map :weight)
+       (into [])))
+
+(defn ->data [data]
+  (->> data
+       (map :date)
+       (into [])))
+
+(defn ->x-range [data]
+  (let [min (-> data
+                last
+                :date
+                (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
+                (date-fns/subDays 4))
+        max (-> data
+                last
+                :date
+                (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
+                (date-fns/addDays 2))]
+    {:min min
+     :max max}))
+
+(defn ->y-range [data]
+  (let [min (-> data
+                last
+                :weight
+                (or 100)
+                (- 25))
+        max (-> data
+                last
+                :weight
+                (or 100)
+                (+ 25))]
+    {:min min
+     :max max}))
+
 (def myChart (chart/Chart.
               (js/document.getElementById "libra")
               {:type "line"
                :data
                {:labels (->> @store
                              :data
-                             (map :date)
-                             (into []))
+                             (->labels))
                 :datasets [{:label "Weight"
                             :data (->> @store
                                        :data
-                                       (map :weight)
-                                       (into []))
+                                       (->data))
                             :fill false
                             :borderColor "rgb(75, 192, 192)"
                             :lineTension 0.1}]}
                :options
                {:scales
-                {:x {:type "time"
-                     :time {:unit "day"
-                            :displayFormats {:day "MMM d"}}
-                     :ticks {:stepSize 3}
-                     :min (-> @store
-                              :data
-                              last
-                              :date
-                              (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
-                              (date-fns/subDays 4))
-                     :max (-> @store
-                              :data
-                              last
-                              :date
-                              (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
-                              (date-fns/addDays 2))}
-                 :y {:min (-> @store
-                              :data
-                              last
-                              :weight
-                              (or 100)
-                              (- 25))
+                {:x (merge {:type "time"
+                            :time {:unit "day"
+                                   :displayFormats {:day "MMM d"}}
+                            :ticks {:stepSize 3}}
+                           (->x-range (:data @store)))
 
-                     :max (-> @store
-                              :data
-                              last
-                              :weight
-                              (or 100)
-                              (+ 25))
-                     :ticks {:stepSize 25}
-                     :startAtZero true}}
+                 :y (merge {:ticks {:stepSize 25}
+                            :startAtZero true}
+                           (->y-range (:data @store)))}
                 :plugins
                 {:legend {:display false}
                  :zoom {:pan {:enabled true}
@@ -81,10 +95,12 @@
    (let [data (->> @store
                    :data
                    (map :weight)
-                   (into []))]
-     (set! (.. myChart -data -datasets -data) data)
-     (set! (.. myChart -data -labels) (->> @store
-                                           :data
-                                           (map :date)
-                                           (into [])))
+                   (into []))
+         labels (->> @store
+                     :data
+                     (map :date)
+                     (into []))]
+     (js/console.log :data data :labels labels)
+     (set! (.. (first (.. myChart -data -datasets)) -data) data)
+     (set! (.. myChart -data -labels) labels)
      (myChart.update))))
