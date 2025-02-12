@@ -139,3 +139,10 @@
   (and (map? resp)
        (integer? (:status resp))
        (map? (:headers resp))))
+
+(defn json
+  "Returns a Ring response with the given JSON body, status of 200, and
+  Content-Type of application/json."
+  [body]
+  (-> (response body)
+      (content-type "application/json")))

@@ -22,11 +22,8 @@
                    env-middleware
                    [logger/logger])))
 
-(defmethod ig/init-key ::routes
-  [_ {:keys [hotreload index static]}]
-  (into [] (concat hotreload index static)))
-
 (defmethod ig/init-key ::handler
   [_ {:keys [routes middlewares]}]
-  (log/info "Initializing handler" routes)
-  (reduce #(%2 %1) (->handler routes) middlewares))
+  (let [routes (into [] (flatten routes))]
+    (log/info "Initializing handler" routes)
+    (reduce #(%2 %1) (->handler routes) middlewares)))
