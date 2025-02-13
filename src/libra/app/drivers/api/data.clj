@@ -27,7 +27,8 @@
               {:date "2024-02-18" :weight 223}
               {:date "2024-02-21" :weight 222}
               {:date "2024-02-24" :weight 221}
-              {:date "2024-02-27" :weight 220}]]
+              {:date "2024-02-27" :weight 220}
+              {:date "2025-02-01" :weight 235}]]
     (-> data
         (json/encode) 
         (response/json))))

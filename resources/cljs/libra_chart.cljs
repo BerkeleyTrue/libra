@@ -29,27 +29,28 @@
   (let [min (-> data
                 last
                 :date
-                (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
+                (#(if % (date-fns/parse % "yyyy-MM-dd" (js/Date.)) (js/Date.)))
                 (date-fns/subDays 4))
         max (-> data
                 last
                 :date
-                (if (date-fns/parse "yyyy-MM-dd" (js/Date.)) (js/Date.))
+                (#(if % (date-fns/parse % "yyyy-MM-dd" (js/Date.)) (js/Date.)))
                 (date-fns/addDays 2))]
     {:min min
      :max max}))
 
+(def y-range 10)
 (defn ->y-range [data]
   (let [min (-> data
                 last
                 :weight
                 (or 100)
-                (- 25))
+                (- (/ y-range 2)))
         max (-> data
                 last
                 :weight
                 (or 100)
-                (+ 25))]
+                (+ (/ y-range 2)))]
     {:min min
      :max max}))
 
@@ -66,7 +67,8 @@
                                        (->data))
                             :fill false
                             :borderColor "rgb(75, 192, 192)"
-                            :lineTension 0.1}]}
+                            :tension 0.4
+                            :pointStyle "rectRot"}]}
                :options
                {:scales
                 {:x (merge {:type "time"
@@ -99,8 +101,13 @@
          labels (->> @store
                      :data
                      (map :date)
-                     (into []))]
-     (js/console.log :data data :labels labels)
+                     (into []))
+         x-range (->x-range (:data @store))
+         y-range (->y-range (:data @store))]
      (set! (.. (first (.. myChart -data -datasets)) -data) data)
      (set! (.. myChart -data -labels) labels)
+     (set! (.. myChart -options -scales -x -min) (:min x-range))
+     (set! (.. myChart -options -scales -x -max) (:max x-range))
+     (set! (.. myChart -options -scales -y -min) (:min y-range))
+     (set! (.. myChart -options -scales -y -max) (:max y-range))
      (myChart.update))))
