@@ -18,12 +18,14 @@
    :libra.app.components/layout {:hotreload? (ig/ref :libra.env/hotreload?)}
 
    :libra.app.drivers.index/routes {:layout (ig/ref :libra.app.components/layout)}
+   :libra.app.drivers.add/routes {:layout (ig/ref :libra.app.components/layout)}
    :libra.app.drivers.api.data/routes {}
 
    :libra.app.router/middleware {:env-middleware (ig/ref :libra.env/middleware)}
 
    :libra.app.router/handler {:routes 
                               [(ig/ref :libra.app.drivers.index/routes)
+                               (ig/ref :libra.app.drivers.add/routes)
                                (ig/ref :libra.app.drivers.api.data/routes)
                                (ig/ref :libra.infra.hotreload/routes)
                                (ig/ref :libra.infra.static/routes)]
