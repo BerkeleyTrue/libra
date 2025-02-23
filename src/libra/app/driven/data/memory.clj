@@ -29,7 +29,10 @@
 (defrecord MemoryRepo []
   data/Repository
   (get-data [_] @data)
-  (add-data [_ item] (swap! item conj item))
+  (add-data [_ weight] 
+    (let [item {:date (str (java.time.LocalDate/now))
+                :weight (Integer/parseInt weight)}]
+      (swap! data conj item)))
   (last-data [_] (last @data)))
 
 (defmethod ig/init-key ::memory-repo
