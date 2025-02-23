@@ -79,6 +79,8 @@
              [:li {:class "mr-2 w-full h-full"}
               (link "/" "Home")]
              [:li {:class "mr-2 w-full h-full"}
+              (link "/weight/add" "Add")]
+             [:li {:class "mr-2 w-full h-full"}
               (link "/login" "Login")]]]
 
            [:script {:src "/public/js/htmx.js"}]

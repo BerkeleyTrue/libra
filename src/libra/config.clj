@@ -17,9 +17,12 @@
    :libra.app.core/on-start-ch {}
    :libra.app.components/layout {:hotreload? (ig/ref :libra.env/hotreload?)}
 
+   :libra.app.driven.data.memory/memory-repo {}
+
    :libra.app.drivers.index/routes {:layout (ig/ref :libra.app.components/layout)}
-   :libra.app.drivers.add/routes {:layout (ig/ref :libra.app.components/layout)}
-   :libra.app.drivers.api.data/routes {}
+   :libra.app.drivers.add/routes {:layout (ig/ref :libra.app.components/layout)
+                                  :repo (ig/ref :libra.app.driven.data.memory/memory-repo)}
+   :libra.app.drivers.api.data/routes {:repo (ig/ref :libra.app.driven.data.memory/memory-repo)}
 
    :libra.app.router/middleware {:env-middleware (ig/ref :libra.env/middleware)}
 

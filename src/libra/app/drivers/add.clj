@@ -3,11 +3,11 @@
    [borkdude.html :as h]
    [integrant.core :as ig]
    [libra.infra.ring :as response]
-   [libra.utils.dep-macro :refer [defact]]))
+   [libra.utils.dep-macro :refer [defact]]
+   [libra.ports.data/memory :as memory]))
 
 (defact ->page
-  [layout]
-  [req]
+  [layout] [req]
 
   (->> [:div {:class "container w-full h-full flex flex-col justify-center items-center"}
         [:form {:class "flex flex-col justify-center items-center w-full h-full"
@@ -29,8 +29,8 @@
        (layout req)
        (response/response)))
 
-(defact ->post-weight []
-  [req]
+(defact ->post-weight 
+  [repo] [req]
   (let [weight (get-in req [:params :weight])]
     (println "weight" weight)
     (response/redirect "/")))
