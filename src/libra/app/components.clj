@@ -84,6 +84,7 @@
               (link "/login" "Login")]]]
 
            [:script {:src "/public/js/htmx.js"}]
+           [:script {:src "/public/js/hyperscript.js"}]
            (when hotreload?
              (js-module "hotreload"))]]])
 

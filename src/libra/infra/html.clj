@@ -9,3 +9,6 @@
      "<script type=" type ">"
      content
      "</script>")]))
+
+(defn hyper [& body]
+  (apply str body))

@@ -11,7 +11,7 @@
         ring/ring                           {:mvn/version "1.12.1"}
         ring/ring-anti-forgery              {:mvn/version "1.4.0"}
 
-        io.github.borkdude/html             {:mvn/version "0.1.1"}
+        io.github.borkdude/html             {:local/root "../html"}
         gaka/gaka                           {:mvn/version "0.3.0"}
 
         cheshire/cheshire                   {:mvn/version "5.13.0"}
